@@ -6,14 +6,13 @@ import {
     useMediaQuery,
     IconButton,
 } from '@mui/material'
-import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import dayjs from 'dayjs'
 import localeData from 'dayjs/plugin/localeData'
 import 'dayjs/locale/fr'
 import { useState, useMemo } from 'react'
 import DayCard from '../Cards/DayCard'
 import CalendarHeader from './CalendarHeader';
+import { Header } from '../Header/Header';
 
 dayjs.extend(localeData)
 dayjs.locale('fr')
@@ -42,35 +41,35 @@ export const CustomCalendar = () => {
 
     const daysInMonth = useMemo(() => {
         const totalDays = currentMonth.daysInMonth()
-        return Array.from({ length: totalDays }, (_, i) =>
-            currentMonth.add(i, 'day').format('YYYY-MM-DD')
-        )
-    }, [currentMonth])
+        const baseDays = Array.from({ length: totalDays }, (_, i) => ({
+            date: currentMonth.add(i, 'day').format('YYYY-MM-DD'),
+            dimmed: false,
+        }))
+
+        // Determine number of cards per row based on screen size
+        const columns = isMobile ? 2 : isSmallScreen ? 3 : 4
+
+        const missing = columns - (baseDays.length % columns || columns) // check if columns are missing a card
+
+        const nextMonthStart = currentMonth.add(1, 'month').startOf('month')
+        const extraDays = Array.from({ length: missing }, (_, i) => ({
+            date: nextMonthStart.add(i, 'day').format('YYYY-MM-DD'),
+            dimmed: true,
+        }))
+
+        return [...baseDays, ...extraDays]
+    }, [currentMonth, isMobile, isSmallScreen])
 
     return (
         <>
-            <Typography
-                variant="h3"
-                sx={{
-                    textAlign: 'center',
-                    padding: '1rem',
-                    mt: isMobile ? '1rem' : '1rem',
-                    color: 'white',
-                    textTransform: 'uppercase',
-                    fontFamily: 'Solano, sans-serif',
-                    fontWeight: 600,
-                }}
-            >
-                Planning des Événements
-            </Typography>
-
+            <Header />
             {/* Month/Year header */}
             <CalendarHeader
                 currentMonth={currentMonth}
-                onMonthChange={handleMonthChange} 
+                onMonthChange={handleMonthChange}
                 minMonth={today.startOf('month')}
                 maxMonth={maxDate.startOf('month')}
-                />
+            />
 
             {/* Grid of DayCards */}
             <Box
@@ -81,16 +80,18 @@ export const CustomCalendar = () => {
                         : isSmallScreen
                             ? 'repeat(3, 1fr)'
                             : 'repeat(4, 1fr)',
+
                     justifyContent: 'center',
                     alignItems: 'center',
                     borderRadius: 2,
                     p: 1,
                 }}
             >
-                {daysInMonth.map((date, i) => (
+                {daysInMonth.map(({ date, dimmed }, i) => (
                     <DayCard
                         key={i}
                         date={date}
+                        dimmed={dimmed}
                         eventName={i % 3 === 0 ? 'Board Games Night' : undefined}
                         availableCount={i % 2 === 0 ? 5 + i : 0}
                     />

@@ -1,4 +1,4 @@
-import { Box, IconButton } from '@mui/material'
+import { Box, IconButton, Stack, Typography } from '@mui/material'
 import Link from 'next/link'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
@@ -13,8 +13,17 @@ export const Footer = () => {
             mt: 2,
             p: "4px 16px"
         }}>
-            <Link href={"https://www.mydigitalschool.com/"}><img src="/images/LOGO_MDS.png" width={100} /></Link>
-                <IconButton onClick={() => window.scrollTo(0, 0)}><KeyboardArrowUpIcon /></IconButton>
+            <Stack direction={"row"} gap={1}>
+                <Typography variant="body2" sx={{ display: "flex", alignItems: "center", gap: 1, ml: 1, fontSize: "0.8rem", fontFamily: 'Consolas, monospace' }}>
+                    Made with 🤍 by
+                </Typography>
+                <Link href={'https://adrienverwaerde.github.io/Portfolio/'}>
+                    <Typography variant="body2" sx={{ fontSize: "0.8rem", fontFamily: 'Consolas, monospace', color: "#FFB905", fontWeight: "bold" }}>
+                        Adrien Verwaerde
+                    </Typography>
+                </Link>
+            </Stack>
+            <IconButton onClick={() => window.scrollTo(0, 0)} sx={{color: "secondary.main"}}><KeyboardArrowUpIcon /></IconButton>
         </Box>
     )
 }
