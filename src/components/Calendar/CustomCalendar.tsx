@@ -94,6 +94,7 @@ export const CustomCalendar = () => {
                         dimmed={dimmed}
                         eventName={i % 3 === 0 ? 'Board Games Night' : undefined}
                         availableCount={i % 2 === 0 ? 5 + i : 0}
+                        onClick={() => console.log('Clicked:', date)}
                     />
                 ))}
             </Box>
