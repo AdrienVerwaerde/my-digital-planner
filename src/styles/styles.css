@@ -1,0 +1,19 @@
+main {
+    min-height: 100vh;
+    padding: 0rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    background: radial-gradient(circle, #2db8c44c, #2db7c4);
+    background-attachment: fixed;
+    font-family: 'Consolas', monospace;
+}
+
+footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    background-color: white;
+}
