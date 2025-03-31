@@ -4,9 +4,15 @@ import dayjs from 'dayjs'
 import { useState } from 'react';
 
 interface EventAccordionProps {
-    date: string
-    eventName?: string
-    availableCount?: number
+    event: {
+        id: string;
+        name: string;
+        location: string;
+        time: string;
+        availableCount: number;
+        isUserParticipating: boolean;
+    };
+    onToggle: (eventId: string, isParticipating: boolean) => void;
 }
 
 const accordionStyle = {
@@ -14,10 +20,11 @@ const accordionStyle = {
     borderRadius: "8px !important",
     boxShadow: "none",
     color: "secondary.main",
+    width: "100%",
 }
 
 
-export const EventAccordion = () => {
+export const EventAccordion = ({ event, onToggle }: EventAccordionProps) => {
     const [isParticipating, setIsParticipating] = useState(false)
 
     const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -25,33 +32,39 @@ export const EventAccordion = () => {
     }
 
     return (
-        <>
-            <Accordion sx={accordionStyle}>
-                <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel1-content"
-                    id="panel1-header"
-                >
-                    <Typography sx={{ fontFamily: 'Consolas, monospace' }}>Event Name</Typography>
-                </AccordionSummary>
-                <AccordionDetails sx={{ fontFamily: 'Roboto, sans-serif' }}>
-                    Lieu
-                    Heure
-                    <Divider sx={{ my: 1 }} />
-                    <Stack direction={"row"} sx={{alignItems: "center"}}>
-                        <Typography variant="caption" sx={{ whiteSpace: "nowrap", fontFamily: 'Roboto, sans-serif' }}><b>5</b> participant.es</Typography>
-                        <FormControlLabel control={<Checkbox checked={isParticipating} onChange={handleCheckboxChange} sx={{
-                            color: "secondary.main",
-                            py: 0,
-                            px: 0.5,
-                            '&.Mui-checked': {
-                                color: "secondary.main",
-                            },
-                            '& .MuiSvgIcon-root': { fontSize: 24 }
-                        }} />} labelPlacement="start" label={isParticipating ? 'Je participe !' : 'Participer ?'} sx={{ ml: 'auto' }} />
-                    </Stack>
-                </AccordionDetails>
-            </Accordion>
-        </>
+        <Accordion sx={accordionStyle}>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography sx={{ fontFamily: 'Consolas, monospace' }}>{event.name}</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+                <Typography>{event.location}</Typography>
+                <Typography>{event.time}</Typography>
+                <Divider sx={{ my: 1 }} />
+                <Stack direction="row" justifyContent="space-between" alignItems="center">
+                    <Typography variant="caption">
+                        <b>{event.availableCount}</b> participant.es
+                    </Typography>
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                sx={{
+                                    color: "secondary.main",
+                                    py: 0,
+                                    px: 0.5,
+                                    '&.Mui-checked': {
+                                        color: "secondary.main",
+                                    },
+                                    '& .MuiSvgIcon-root': { fontSize: 24 }
+                                }}
+                                checked={isParticipating}
+                                onChange={handleCheckboxChange}
+                            />
+                        }
+                        label={isParticipating ? 'Je participe !' : 'Participer ?'}
+                        labelPlacement="start"
+                    />
+                </Stack>
+            </AccordionDetails>
+        </Accordion>
     )
 }

@@ -2,6 +2,7 @@ import { Card, CardContent, Typography, Box, useMediaQuery } from '@mui/material
 import dayjs from 'dayjs'
 import { useState } from 'react'
 import CardModal from './CardModal'
+import { mockEvents } from '@/app/data/dummyData'
 
 type DayCardProps = {
     date: string
@@ -45,7 +46,7 @@ const DayCard = ({ date, eventName, availableCount = 0, dimmed }: DayCardProps) 
                             {formattedDate}
                         </Typography>
                         {eventName ? (
-                            <Typography variant="body2" sx={{ backgroundColor: "#ffb905", borderRadius: 2, p: 1, fontFamily: 'Consolas, monospace' }}>{eventName}</Typography>
+                            <Typography variant="body2" sx={{ backgroundColor: "primary.light", borderRadius: 2, p: 1, fontFamily: 'Consolas, monospace' }}>{eventName}</Typography>
                         ) : (
                             <Typography variant="caption" color="text.secondary" sx={{ fontFamily: 'Consolas, monospace' }}>
                                 Aucun événement
@@ -55,9 +56,12 @@ const DayCard = ({ date, eventName, availableCount = 0, dimmed }: DayCardProps) 
                     <Typography variant="caption" sx={{ whiteSpace: "nowrap", mt: "auto", fontFamily: 'Roboto, sans-serif' }}><b>{availableCount}</b> participant.es</Typography>
                 </CardContent>
             </Card>
-            <CardModal isModalOpen={open} handleCloseModal={handleModalOpen} eventName={'Board Games Night'}
-                availableCount={5}
-                date={date}/>
+            <CardModal
+                isModalOpen={open}
+                handleCloseModal={handleModalOpen}
+                date={date}
+                events={mockEvents}
+            />
         </>
     )
 }
