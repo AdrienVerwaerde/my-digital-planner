@@ -4,26 +4,45 @@ import {
     Box,
     Typography,
     useMediaQuery,
-    IconButton,
 } from '@mui/material'
 import dayjs from 'dayjs'
 import localeData from 'dayjs/plugin/localeData'
 import 'dayjs/locale/fr'
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import DayCard from '../Cards/DayCard'
-import CalendarHeader from './CalendarHeader';
-import { Header } from '../Header/Header';
+import CalendarHeader from './CalendarHeader'
+import { Header } from '../Header/Header'
 
 dayjs.extend(localeData)
 dayjs.locale('fr')
 
+type CalendarEvent = {
+    id: string
+    name: string
+    location: string
+    time: string
+    availableCount: number
+    isUserParticipating: boolean
+    date: string
+}
+
 export const CustomCalendar = () => {
     const isSmallScreen = useMediaQuery('(max-width: 1080px)')
     const isMobile = useMediaQuery('(max-width: 640px)')
+    const [events, setEvents] = useState([])
+
+    useEffect(() => {
+        const fetchEvents = async () => {
+            const res = await fetch('/api/events')
+            const data = await res.json()
+            setEvents(data)
+        }
+
+        fetchEvents()
+    }, [])
 
     const today = dayjs()
     const maxDate = today.add(1, 'year')
-
     const [currentMonth, setCurrentMonth] = useState(today.startOf('month'))
 
     const handleMonthChange = (direction: 'prev' | 'next') => {
@@ -32,7 +51,6 @@ export const CustomCalendar = () => {
                 ? currentMonth.subtract(1, 'month')
                 : currentMonth.add(1, 'month')
 
-        // limit between today and today + 1 year
         if (nextMonth.isBefore(today.startOf('month'))) return
         if (nextMonth.isAfter(maxDate.startOf('month'))) return
 
@@ -46,10 +64,8 @@ export const CustomCalendar = () => {
             dimmed: false,
         }))
 
-        // Determine number of cards per row based on screen size
         const columns = isMobile ? 2 : isSmallScreen ? 3 : 4
-
-        const missing = columns - (baseDays.length % columns || columns) // check if columns are missing a card
+        const missing = columns - (baseDays.length % columns || columns)
 
         const nextMonthStart = currentMonth.add(1, 'month').startOf('month')
         const extraDays = Array.from({ length: missing }, (_, i) => ({
@@ -60,10 +76,27 @@ export const CustomCalendar = () => {
         return [...baseDays, ...extraDays]
     }, [currentMonth, isMobile, isSmallScreen])
 
+    const eventsByDate = useMemo(() => {
+        if (!Array.isArray(events)) return {}
+
+        return events.reduce((acc: Record<string, CalendarEvent[]>, event: CalendarEvent) => {
+            if (!acc[event.date]) acc[event.date] = []
+            acc[event.date].push(event)
+            return acc
+        }, {})
+    }, [events])
+
+    const refreshEvents = async () => {
+        const res = await fetch('/api/events')
+        const data = await res.json()
+        setEvents(data)
+    }
+
+
     return (
         <>
             <Header />
-            {/* Month/Year header */}
+
             <CalendarHeader
                 currentMonth={currentMonth}
                 onMonthChange={handleMonthChange}
@@ -71,7 +104,6 @@ export const CustomCalendar = () => {
                 maxMonth={maxDate.startOf('month')}
             />
 
-            {/* Grid of DayCards */}
             <Box
                 sx={{
                     display: 'grid',
@@ -80,23 +112,27 @@ export const CustomCalendar = () => {
                         : isSmallScreen
                             ? 'repeat(3, 1fr)'
                             : 'repeat(4, 1fr)',
-
                     justifyContent: 'center',
                     alignItems: 'center',
                     borderRadius: 2,
                     p: 1,
                 }}
             >
-                {daysInMonth.map(({ date, dimmed }, i) => (
-                    <DayCard
-                        key={i}
-                        date={date}
-                        dimmed={dimmed}
-                        eventName={i % 3 === 0 ? 'Board Games Night' : undefined}
-                        availableCount={i % 2 === 0 ? 5 + i : 0}
-                        onClick={() => console.log('Clicked:', date)}
-                    />
-                ))}
+                {daysInMonth.map(({ date, dimmed }, i) => {
+                    const eventsForThisDay = eventsByDate[date] || []
+
+                    return (
+                        <DayCard
+                            key={i}
+                            date={date}
+                            dimmed={dimmed}
+                            events={eventsForThisDay}
+                            onClick={() => console.log('Clicked:', date)}
+                            refreshEvents={refreshEvents}
+
+                        />
+                    )
+                })}
             </Box>
         </>
     )

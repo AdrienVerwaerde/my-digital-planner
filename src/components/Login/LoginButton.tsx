@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
 import { signIn } from "next-auth/react";
 import { useState } from "react";
 
@@ -13,12 +13,14 @@ function LoginButton() {
         setIsLoading(false);
         console.log("Signed in", signIn);
     };
+
     return (
         <Button
+            variant="contained"
             onClick={() => handleLogin()}
             disabled={isLoading}
         >
-            {isLoading ? "En cours..." : "Connecte-toi"}
+            {isLoading ? <CircularProgress size={24} sx={{color: "white"}}/> : "Connecte-toi"}
         </Button>
     );
 }

@@ -1,5 +1,7 @@
+'use client'
+
 import { Box, Divider, Stack, Typography, useMediaQuery } from '@mui/material'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import GreetMessage from './GreetMessage'
 import LogoutButton from '../Login/LogoutButton'
 import { useSession } from 'next-auth/react'
@@ -11,18 +13,20 @@ export const Header = () => {
     const { data: session } = useSession()
 
     return (
-        <Box sx={{width: isMobile ? "inherit" : "100%", px: isMobile ? "0" : "2rem"}}>
+        <Box sx={{ width: isMobile ? "inherit" : "100%", px: isMobile ? "0" : "2rem" }}>
             {session ? (
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: isSmallScreen ? 'space-between' : 'flex-end', width: '100%', px: '1rem', my: '1rem', gap: isMobile ? '0' : '2rem'}}>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: isSmallScreen ? 'space-between' : 'flex-end', width: '100%', px: '1rem', my: '1rem', gap: isMobile ? '0' : '2rem' }}>
                     <GreetMessage />
                     <LogoutButton />
                 </Box>
             ) : (
-                <LoginButton />
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', width: '100%', px: '1rem', my: '1rem' }}>
+                    <LoginButton />
+                </Box>
             )
             }
-            {isMobile && 
-            <Divider />}
+            {isMobile &&
+                <Divider />}
             <Box sx={{ display: 'flex', flexDirection: isMobile ? 'row' : 'column', alignItems: 'center', justifyContent: 'center', gap: 2, p: '1rem' }}>
                 <img src='/images/LOGO_MDS_WHITEBG.png' width={isMobile ? 100 : 350} />
                 <Typography

@@ -15,25 +15,25 @@ interface EventAccordionProps {
     onToggle: (eventId: string, isParticipating: boolean) => void;
 }
 
-const accordionStyle = {
-    backgroundColor: "#FFB905",
-    borderRadius: "8px !important",
-    boxShadow: "none",
-    color: "secondary.main",
-    width: "100%",
-}
-
 
 export const EventAccordion = ({ event, onToggle }: EventAccordionProps) => {
-    const [isParticipating, setIsParticipating] = useState(false)
+    const [isParticipating, setIsParticipating] = useState(event.isUserParticipating)
 
-    const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setIsParticipating(event.target.checked)
+
+    const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const checked = e.target.checked
+        setIsParticipating(checked)
+        onToggle(event.id, checked)
     }
 
     return (
-        <Accordion sx={accordionStyle}>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+        <Accordion sx={{
+            backgroundColor: isParticipating ? 'primary.main' : "primary.light", borderRadius: "8px !important",
+            boxShadow: "none",
+            color: isParticipating ? "white" : "secondary.main",
+            width: "100%",
+        }}>
+            <AccordionSummary expandIcon={<ExpandMoreIcon sx={{ color: isParticipating ? "white" : "secondary.main" }} />}>
                 <Typography sx={{ fontFamily: 'Consolas, monospace' }}>{event.name}</Typography>
             </AccordionSummary>
             <AccordionDetails>
@@ -52,7 +52,7 @@ export const EventAccordion = ({ event, onToggle }: EventAccordionProps) => {
                                     py: 0,
                                     px: 0.5,
                                     '&.Mui-checked': {
-                                        color: "secondary.main",
+                                        color: isParticipating ? "white" : "secondary.main",
                                     },
                                     '& .MuiSvgIcon-root': { fontSize: 24 }
                                 }}

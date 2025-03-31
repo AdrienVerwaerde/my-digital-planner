@@ -1,22 +1,25 @@
 
-import { Box, Button, Card, CardContent, List, ListItem, Modal, Typography, useMediaQuery } from '@mui/material'
+import { Box, Button, Card, CardContent, CircularProgress, List, ListItem, Modal, Typography, useMediaQuery } from '@mui/material'
 import dayjs from 'dayjs';
-import { use, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import { EventAccordion } from '../Events/EventAccordion';
+import { useFormattedDate } from '@/app/hooks/useFormattedDate';
 
 interface CardModalProps {
     isModalOpen: boolean;
     handleCloseModal: (value: boolean) => void;
-    date: string
+    date: string;
     events: {
-        id: string
-        name: string
-        location: string
-        time: string
-        availableCount: number
-        isUserParticipating: boolean
+        id: string;
+        name: string;
+        location: string;
+        time: string;
+        availableCount: number;
+        isUserParticipating: boolean;
     }[];
+    refreshEvents: () => Promise<void>;
 }
+
 
 const modalStyle = {
     position: 'absolute',
@@ -44,14 +47,15 @@ const mobileModalStyle = {
     p: 1,
 };
 
-const CardModal = ({ isModalOpen, handleCloseModal, date, events }: CardModalProps) => {
+const CardModal = ({ isModalOpen, handleCloseModal, date, events, refreshEvents }: CardModalProps) => {
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const isMobile = useMediaQuery('(max-width: 640px)')
+
+
     const handleClose = () => {
         handleCloseModal(false);
     };
-    const formattedDate = dayjs(date)
-        .format('dddd DD/MM')
-        .replace(/^\w/, (c) => c.toUpperCase())
+    const formattedDate = useFormattedDate(date)
     const [responses, setResponses] = useState<{ [eventId: string]: boolean }>({})
 
     const handleToggleParticipation = (eventId: string, isParticipating: boolean) => {
@@ -59,22 +63,27 @@ const CardModal = ({ isModalOpen, handleCloseModal, date, events }: CardModalPro
     }
 
     const handleSubmit = async () => {
-        // call your API here with event IDs where isParticipating is true
-        const participatingEvents = Object.entries(responses)
-            .filter(([_, isIn]) => isIn)
-            .map(([eventId]) => eventId)
+        setIsLoading(true);
 
-        // Example:
-        await fetch('/api/participate', {
-            method: 'POST',
-            body: JSON.stringify({ participatingEvents }),
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
+        try {
+            const submissionPromises = events.map(event => {
+                const isParticipating = responses[event.id] ?? event.isUserParticipating;
+                return fetch('/api/events/participate', {
+                    method: 'POST',
+                    body: JSON.stringify({ eventId: event.id, isParticipating }),
+                    headers: { 'Content-Type': 'application/json' },
+                });
+            });
 
-        handleCloseModal(false)
-    }
+            await Promise.all(submissionPromises);
+            await refreshEvents();
+            handleCloseModal(false);
+        } catch (error) {
+            console.error("Error submitting participation:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     return (
         <Modal
@@ -96,10 +105,10 @@ const CardModal = ({ isModalOpen, handleCloseModal, date, events }: CardModalPro
                         <Typography variant="subtitle2" gutterBottom sx={{ fontWeight: 600, fontFamily: 'Roboto, sans-serif' }}>
                             {formattedDate}
                         </Typography>
-                        <List sx={{display: 'flex', flexDirection: 'column', gap: 1}}>
+                        <List sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                             {events.length > 0 ? (
                                 events.map((event) => (
-                                    <ListItem key={event.id} sx={{width: '100%', p: 0}}>
+                                    <ListItem key={event.id} sx={{ width: '100%', p: 0 }}>
                                         <EventAccordion
                                             key={event.id}
                                             event={event}
@@ -118,8 +127,11 @@ const CardModal = ({ isModalOpen, handleCloseModal, date, events }: CardModalPro
                             )}
                         </List>
                     </Box>
-                    <Button sx={{ mt: 'auto' }} onClick={handleSubmit}>
-                        Valider
+                    <Button
+                        sx={{ mt: 'auto' }}
+                        onClick={handleSubmit}
+                        disabled={isLoading}>
+                        {isLoading ? <CircularProgress size={24} sx={{ color: "white" }} /> : "Valider"}
                     </Button>
                 </CardContent>
             </Card>
