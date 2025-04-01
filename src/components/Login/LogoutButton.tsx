@@ -7,6 +7,7 @@ function LogoutButton() {
         <Button
             onClick={() => signOut()}
             variant="contained"
+            sx={{lineHeight:1, p:1.25}}
         >
             Déconnexion
         </Button>

@@ -32,6 +32,7 @@ export const EventAccordion = ({ event, onToggle }: EventAccordionProps) => {
             boxShadow: "none",
             color: isParticipating ? "white" : "secondary.main",
             width: "100%",
+            transition: "all 0.2s ease",
         }}>
             <AccordionSummary expandIcon={<ExpandMoreIcon sx={{ color: isParticipating ? "white" : "secondary.main" }} />}>
                 <Typography sx={{ fontFamily: 'Consolas, monospace' }}>{event.name}</Typography>
@@ -51,6 +52,7 @@ export const EventAccordion = ({ event, onToggle }: EventAccordionProps) => {
                                     color: "secondary.main",
                                     py: 0,
                                     px: 0.5,
+                                    
                                     '&.Mui-checked': {
                                         color: isParticipating ? "white" : "secondary.main",
                                     },

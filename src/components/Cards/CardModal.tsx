@@ -1,9 +1,10 @@
 
-import { Box, Button, Card, CardContent, CircularProgress, List, ListItem, Modal, Typography, useMediaQuery } from '@mui/material'
+import { Box, Button, Card, CardContent, Checkbox, CircularProgress, FormControlLabel, IconButton, List, ListItem, Modal, Stack, Typography, useMediaQuery } from '@mui/material'
 import dayjs from 'dayjs';
 import { use, useEffect, useState } from 'react';
 import { EventAccordion } from '../Events/EventAccordion';
 import { useFormattedDate } from '@/app/hooks/useFormattedDate';
+import { CheckBox, Close } from '@mui/icons-material';
 
 interface CardModalProps {
     isModalOpen: boolean;
@@ -50,6 +51,8 @@ const mobileModalStyle = {
 const CardModal = ({ isModalOpen, handleCloseModal, date, events, refreshEvents }: CardModalProps) => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const isMobile = useMediaQuery('(max-width: 640px)')
+    const [isAvailable, setIsAvailable] = useState<boolean>(false)
+
 
 
     const handleClose = () => {
@@ -63,27 +66,39 @@ const CardModal = ({ isModalOpen, handleCloseModal, date, events, refreshEvents 
     }
 
     const handleSubmit = async () => {
-        setIsLoading(true);
+        setIsLoading(true)
 
         try {
+            // Update participation
             const submissionPromises = events.map(event => {
-                const isParticipating = responses[event.id] ?? event.isUserParticipating;
+                const isParticipating = responses[event.id] ?? event.isUserParticipating
                 return fetch('/api/events/participate', {
                     method: 'POST',
                     body: JSON.stringify({ eventId: event.id, isParticipating }),
                     headers: { 'Content-Type': 'application/json' },
-                });
-            });
+                })
+            })
 
-            await Promise.all(submissionPromises);
-            await refreshEvents();
-            handleCloseModal(false);
-        } catch (error) {
-            console.error("Error submitting participation:", error);
+            // Handle availability
+            if (isAvailable) {
+                submissionPromises.push(
+                    fetch('/api/availability', {
+                        method: 'POST',
+                        body: JSON.stringify({ date }),
+                        headers: { 'Content-Type': 'application/json' },
+                    })
+                )
+            }
+
+            await Promise.all(submissionPromises)
+            await refreshEvents()
+            handleCloseModal(false)
+        } catch (err) {
+            console.error("Submission error:", err)
         } finally {
-            setIsLoading(false);
+            setIsLoading(false)
         }
-    };
+    }
 
     return (
         <Modal
@@ -105,6 +120,9 @@ const CardModal = ({ isModalOpen, handleCloseModal, date, events, refreshEvents 
                         <Typography variant="subtitle2" gutterBottom sx={{ fontWeight: 600, fontFamily: 'Roboto, sans-serif' }}>
                             {formattedDate}
                         </Typography>
+                        <IconButton onClick={handleClose} sx={{ position: "absolute", top: 5, right: 5 }}>
+                            <Close fontSize="small" />
+                        </IconButton>
                         <List sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                             {events.length > 0 ? (
                                 events.map((event) => (
@@ -126,6 +144,17 @@ const CardModal = ({ isModalOpen, handleCloseModal, date, events, refreshEvents 
                                 </Typography>
                             )}
                         </List>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={isAvailable}
+                                    onChange={(e) => setIsAvailable(e.target.checked)}
+                                    color="primary"
+                                />
+                            }
+                            label="Je suis disponible, même si je ne participe pas à un événement."
+                            sx={{ mt: 2 }}
+                        />
                     </Box>
                     <Button
                         sx={{ mt: 'auto' }}
