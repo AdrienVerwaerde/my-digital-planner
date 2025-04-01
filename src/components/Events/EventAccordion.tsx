@@ -48,11 +48,12 @@ export const EventAccordion = ({ event, onToggle }: EventAccordionProps) => {
                     <FormControlLabel
                         control={
                             <Checkbox
+                                disableRipple
                                 sx={{
                                     color: "secondary.main",
                                     py: 0,
                                     px: 0.5,
-                                    
+
                                     '&.Mui-checked': {
                                         color: isParticipating ? "white" : "secondary.main",
                                     },

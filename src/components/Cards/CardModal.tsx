@@ -80,11 +80,11 @@ const CardModal = ({ isModalOpen, handleCloseModal, date, events, refreshEvents 
             })
 
             // Handle availability
-            if (isAvailable) {
+            if (isAvailable !== undefined) {
                 submissionPromises.push(
                     fetch('/api/availability', {
                         method: 'POST',
-                        body: JSON.stringify({ date }),
+                        body: JSON.stringify({ date, isAvailable }),
                         headers: { 'Content-Type': 'application/json' },
                     })
                 )
@@ -148,12 +148,21 @@ const CardModal = ({ isModalOpen, handleCloseModal, date, events, refreshEvents 
                             control={
                                 <Checkbox
                                     checked={isAvailable}
-                                    onChange={(e) => setIsAvailable(e.target.checked)}
-                                    color="primary"
+                                    disableRipple
+                                    onChange={(e) => {
+                                        setIsAvailable(e.target.checked)
+                                    }}
+                                    sx={{
+                                        color: "secondary.main",
+                                        '&.Mui-checked': {
+                                            color: isAvailable? "primary.main" : "secondary.main",
+                                        },
+                                        '& .MuiSvgIcon-root': { fontSize: 24 }
+                                    }}
                                 />
                             }
-                            label="Je suis disponible, même si je ne participe pas à un événement."
-                            sx={{ mt: 2 }}
+                            label="Je suis disponible !"
+                            sx={{ mt: 2, color: isAvailable ? "primary.main" : "secondary.main", transition: "all 0.2s ease" }}
                         />
                     </Box>
                     <Button
