@@ -9,13 +9,13 @@ import { useFormattedDate } from '@/app/hooks/useFormattedDate'
 type DayCardProps = {
     date: string
     dimmed?: boolean
-    events?: {
-        id: string
-        name: string
-        location: string
-        time: string
-        availableCount: number
-        isUserParticipating: boolean
+    events: {
+        id: string;
+        name: string;
+        locations: { id: string; name: string }[];
+        time: string;
+        availableCount: number;
+        isUserParticipating: boolean;
     }[]
     refreshEvents: () => Promise<void>
     onClick?: () => void

@@ -16,24 +16,34 @@ model User {
   eventsCreated   Event[]  @relation("UserEvents") // 1-to-many
   attendingEvents Event[]  @relation("EventParticipants") // many-to-many
 
-  accounts       Account[]
-  sessions       Session[]
-  availabilities Availability[]
+  accounts         Account[]
+  sessions         Session[]
+  availabilities   Availability[]
+  createdLocations Location[]
 }
 
 model Event {
-  id           String   @id @default(cuid())
+  id           String     @id @default(cuid())
   date         DateTime
   activity     String
-  location     String
-  createdBy    User     @relation("UserEvents", fields: [createdById], references: [id])
+  locations    Location[] @relation("EventLocations")
+  createdBy    User       @relation("UserEvents", fields: [createdById], references: [id])
   createdById  String
-  participants User[]   @relation("EventParticipants") // many-to-many
+  participants User[]     @relation("EventParticipants") // many-to-many
 }
 
 enum Role {
   STUDENT
   ADMIN
+}
+
+model Location {
+  id          String  @id @default(cuid())
+  name        String
+  address     String
+  createdBy   User    @relation(fields: [createdById], references: [id])
+  createdById String
+  events      Event[] @relation("EventLocations")
 }
 
 model Availability {

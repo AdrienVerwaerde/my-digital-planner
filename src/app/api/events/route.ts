@@ -21,13 +21,14 @@ export async function GET(req: Request) {
     const events = await prisma.event.findMany({
         include: {
             participants: true,
+            locations: { select: { id: true, name: true } },
         },
     })
 
     const mapped = events.map(event => ({
         id: event.id,
         name: event.activity,
-        location: event.location,
+        location: event.locations,
         time: event.date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         date: event.date.toISOString().split('T')[0],
         availableCount: event.participants.length,

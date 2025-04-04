@@ -7,7 +7,10 @@ interface EventAccordionProps {
     event: {
         id: string;
         name: string;
-        location: string;
+        locations: {
+            id: string;
+            name: string;
+        }[];
         time: string;
         availableCount: number;
         isUserParticipating: boolean;
@@ -38,7 +41,10 @@ export const EventAccordion = ({ event, onToggle }: EventAccordionProps) => {
                 <Typography sx={{ fontFamily: 'Consolas, monospace' }}>{event.name}</Typography>
             </AccordionSummary>
             <AccordionDetails>
-                <Typography>{event.location}</Typography>
+                {event.locations?.map(loc => (
+                    <Typography key={loc.id}>{loc.name}</Typography>
+                ))}
+
                 <Typography>{event.time}</Typography>
                 <Divider sx={{ my: 1 }} />
                 <Stack direction="row" justifyContent="space-between" alignItems="center">

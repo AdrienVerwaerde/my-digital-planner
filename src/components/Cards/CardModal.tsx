@@ -1,10 +1,10 @@
 
-import { Box, Button, Card, CardContent, Checkbox, CircularProgress, FormControlLabel, IconButton, List, ListItem, Modal, Stack, Typography, useMediaQuery } from '@mui/material'
-import dayjs from 'dayjs';
-import { use, useEffect, useState } from 'react';
+import { Box, Button, Card, CardContent, CircularProgress, IconButton, List, ListItem, Modal, Stack, Typography, useMediaQuery } from '@mui/material'
+import { useState } from 'react';
 import { EventAccordion } from '../Events/EventAccordion';
 import { useFormattedDate } from '@/app/hooks/useFormattedDate';
-import { CheckBox, Close } from '@mui/icons-material';
+import { Close } from '@mui/icons-material';
+import CardDialogDemo from './CardDialog';
 
 interface CardModalProps {
     isModalOpen: boolean;
@@ -13,11 +13,11 @@ interface CardModalProps {
     events: {
         id: string;
         name: string;
-        location: string;
+        locations: { id: string; name: string }[];
         time: string;
         availableCount: number;
         isUserParticipating: boolean;
-    }[];
+    }[]
     refreshEvents: () => Promise<void>;
 }
 
@@ -144,7 +144,7 @@ const CardModal = ({ isModalOpen, handleCloseModal, date, events, refreshEvents 
                                 </Typography>
                             )}
                         </List>
-                        <FormControlLabel
+                        {/* <FormControlLabel
                             control={
                                 <Checkbox
                                     checked={isAvailable}
@@ -163,7 +163,10 @@ const CardModal = ({ isModalOpen, handleCloseModal, date, events, refreshEvents 
                             }
                             label="Je suis disponible !"
                             sx={{ mt: 2, color: isAvailable ? "primary.main" : "secondary.main", transition: "all 0.2s ease" }}
-                        />
+                        /> */}
+                        <CardDialogDemo
+                            date={date}
+                            refreshEvents={refreshEvents} />
                     </Box>
                     <Button
                         sx={{ mt: 'auto' }}

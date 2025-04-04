@@ -24,9 +24,9 @@ const theme = createTheme({
                     props: { variant: 'contained' },
                     style: {
                         borderRadius: "8px",
-                        fontFamily: 'Roboto, sans-serif', 
+                        fontFamily: 'Roboto, sans-serif',
                         fontSize: '0.8rem',
-                        color: 'white', 
+                        color: 'white',
                         fontWeight: 600,
                         textTransform: 'uppercase',
                         boxShadow: 'none',
@@ -43,8 +43,8 @@ const theme = createTheme({
             styleOverrides: {
                 root: {
                     borderRadius: "8px",
-                    fontFamily: 'Roboto, sans-serif', 
-                    color: 'white', 
+                    fontFamily: 'Roboto, sans-serif',
+                    color: 'white',
                     fontWeight: 600,
                     textTransform: 'uppercase',
                     boxShadow: 'none',
