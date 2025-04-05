@@ -19,7 +19,7 @@ dayjs.locale('fr')
 type CalendarEvent = {
     id: string
     name: string
-    location: string
+    locations: { id: string; name: string }[];
     time: string
     availableCount: number
     isUserParticipating: boolean
@@ -59,10 +59,16 @@ export const CustomCalendar = () => {
 
     const daysInMonth = useMemo(() => {
         const totalDays = currentMonth.daysInMonth()
-        const baseDays = Array.from({ length: totalDays }, (_, i) => ({
-            date: currentMonth.add(i, 'day').format('YYYY-MM-DD'),
-            dimmed: false,
-        }))
+        const baseDays = Array.from({ length: totalDays }, (_, i) => {
+            const currentDate = currentMonth.add(i, 'day')
+            return {
+                date: currentDate.format('YYYY-MM-DD'),
+                today: currentDate.isSame(today, 'day'),
+                dimmed: false,
+                isPast: currentDate.isBefore(today, 'day'),
+            }
+        })
+
 
         const columns = isMobile ? 2 : isSmallScreen ? 3 : 4
         const missing = columns - (baseDays.length % columns || columns)
@@ -70,7 +76,9 @@ export const CustomCalendar = () => {
         const nextMonthStart = currentMonth.add(1, 'month').startOf('month')
         const extraDays = Array.from({ length: missing }, (_, i) => ({
             date: nextMonthStart.add(i, 'day').format('YYYY-MM-DD'),
+            today: false,
             dimmed: true,
+            isPast: false,
         }))
 
         return [...baseDays, ...extraDays]
@@ -118,7 +126,7 @@ export const CustomCalendar = () => {
                     p: 1,
                 }}
             >
-                {daysInMonth.map(({ date, dimmed }, i) => {
+                {daysInMonth.map(({ date, dimmed, isPast, today }, i) => {
                     const eventsForThisDay = eventsByDate[date] || []
 
                     return (
@@ -126,6 +134,8 @@ export const CustomCalendar = () => {
                             key={i}
                             date={date}
                             dimmed={dimmed}
+                            today={today}
+                            isPast={isPast}
                             events={eventsForThisDay}
                             onClick={() => console.log('Clicked:', date)}
                             refreshEvents={refreshEvents}

@@ -116,10 +116,10 @@ function EventCreateDialog({ open, onClose, selectedValue, selectedDate, refresh
                                 sx: {
                                     '& .MuiOutlinedInput-root': {
                                         color: 'secondary.main',
-                                        p: 1,
+                                        pr: 1.5,
+                                        py: 1,
                                         '&.Mui-error fieldset': {
                                             borderColor: 'secondary.main',
-
                                         },
                                     },
                                 },

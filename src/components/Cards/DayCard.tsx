@@ -9,6 +9,8 @@ import { useFormattedDate } from '@/app/hooks/useFormattedDate'
 type DayCardProps = {
     date: string
     dimmed?: boolean
+    isPast?: boolean
+    today?: boolean
     events: {
         id: string;
         name: string;
@@ -21,7 +23,7 @@ type DayCardProps = {
     onClick?: () => void
 }
 
-const DayCard = ({ date, dimmed, events = [], refreshEvents }: DayCardProps) => {
+const DayCard = ({ date, dimmed, isPast, today, events = [], refreshEvents }: DayCardProps) => {
     const formattedDate = useFormattedDate(date)
 
     const isMobile = useMediaQuery('(max-width: 640px)')
@@ -31,16 +33,18 @@ const DayCard = ({ date, dimmed, events = [], refreshEvents }: DayCardProps) => 
         height: 170,
         borderRadius: 2,
         m: "2px",
-        cursor: 'pointer',
+        cursor: isPast ? 'default' : 'pointer',
         transition: 'all 0.05s ease',
         '&:hover': {
-            border: '2px solid #FFB905',
-            boxShadow: "none",
+            border: isPast ? 'none' : '2px solid #FFB905',
+            boxShadow: isPast ? '0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);' : "none",
         },
     }
 
     const [open, setOpen] = useState(false)
-    const handleModalOpen = () => { setOpen(!open) }
+    const handleModalOpen = () => {
+        if (!isPast) setOpen(true)
+    }
 
     const participantCount = events.reduce(
         (total, event) => total + (event.availableCount || 0),
@@ -57,11 +61,12 @@ const DayCard = ({ date, dimmed, events = [], refreshEvents }: DayCardProps) => 
                         justifyContent: 'space-between',
                         color: "secondary.main",
                         height: "100%",
-                        opacity: dimmed ? 0.4 : 1
+                        opacity: dimmed || isPast ? 0.4 : 1,
+
                     }}
                 >
                     <Box>
-                        <Typography variant="subtitle2" gutterBottom sx={{ fontWeight: 600, fontFamily: 'Roboto, sans-serif' }}>
+                        <Typography variant="subtitle2" gutterBottom sx={{ fontWeight: 600, fontFamily: 'Roboto, sans-serif', color: today ? "primary.light" : "secondary.main" }}>
                             {formattedDate}
                         </Typography>
                         {events.length > 0 ? (
@@ -87,11 +92,11 @@ const DayCard = ({ date, dimmed, events = [], refreshEvents }: DayCardProps) => 
                         <b>{participantCount}</b> participant.es
                     </Typography>
                 </CardContent>
-            </Card>
+            </Card >
 
             <CardModal
                 isModalOpen={open}
-                handleCloseModal={handleModalOpen}
+                handleCloseModal={() => setOpen(false)}
                 date={date}
                 events={events}
                 refreshEvents={refreshEvents}
