@@ -1,10 +1,8 @@
-import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Checkbox, Divider, FormControlLabel, Stack, Typography } from '@mui/material'
+import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Checkbox, Divider, FormControlLabel, IconButton, Stack, Typography } from '@mui/material'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import MyLocationIcon from '@mui/icons-material/MyLocation';
-import dayjs from 'dayjs'
 import { useState } from 'react';
 import { Place } from '@mui/icons-material';
-import Link from 'next/link';
+import DeleteIcon from '@mui/icons-material/Delete'
 
 interface EventAccordionProps {
     event: {
@@ -21,10 +19,12 @@ interface EventAccordionProps {
         isUserParticipating: boolean;
     };
     onToggle: (eventId: string, isParticipating: boolean) => void;
+    onDelete: (eventId: string) => Promise<void>
+    canDelete: boolean
 }
 
 
-export const EventAccordion = ({ event, onToggle }: EventAccordionProps) => {
+export const EventAccordion = ({ event, onToggle, onDelete, canDelete }: EventAccordionProps) => {
     const [isParticipating, setIsParticipating] = useState(event.isUserParticipating)
 
 
@@ -49,10 +49,14 @@ export const EventAccordion = ({ event, onToggle }: EventAccordionProps) => {
                 {event.locations?.map(loc => (
                     <Box key={loc.id}>
                         <Typography
-                            sx={{fontFamily: 'Roboto, sans-serif'}}>
+                            sx={{ fontFamily: 'Roboto, sans-serif' }}>
                             {loc.name}
                         </Typography>
-                        <Typography sx={{
+                        <Typography 
+                        component={"a"}
+                        href={loc.link}
+                        target="_blank"
+                        sx={{
                             fontFamily: 'Roboto, sans-serif', fontSize: '0.875rem', opacity: 0.6, cursor: "pointer",
                             color: "inherit",
                             transition: "all 0.2s ease",
@@ -65,7 +69,24 @@ export const EventAccordion = ({ event, onToggle }: EventAccordionProps) => {
                         </Typography>
                     </Box>
                 ))}
-                <Typography sx={{ mt: 1 }}>{event.time}</Typography>
+                <Stack direction="row" sx={{justifyContent: "space-between", alignItems: "center"}}>
+                    <Typography>{event.time}</Typography>
+                    {canDelete && (
+                        <IconButton
+                        title="Supprimer cette sortie"
+                            onClick={() => onDelete(event.id)}
+                            size="medium"
+                            sx={{
+                                ml: 1,
+                                
+                                color: isParticipating ? 'white' : 'secondary.main',
+                                
+                            }}
+                        >
+                            <DeleteIcon fontSize="small" />
+                        </IconButton>
+                    )}
+                </Stack>
                 <Divider sx={{ my: 1, backgroundColor: isParticipating ? "white" : "secondary.main", borderColor: isParticipating ? "white" : "secondary.main" }} />
                 <Stack direction="row" justifyContent="space-between" alignItems="center">
                     <Typography variant="caption">

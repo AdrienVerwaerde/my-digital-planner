@@ -156,7 +156,7 @@ function EventCreateDialog({ open, onClose, selectedValue, selectedDate, refresh
                         sx={{ mt: 'auto', width: '100%' }}
                         onClick={handleSubmit}
                         disabled={isLoading}>
-                        {isLoading ? <CircularProgress size={24} sx={{ color: "white" }} /> : "Valider"}
+                        {isLoading ? <CircularProgress size={24} sx={{ color: "#fff" }} /> : "Valider"}
                     </Button>
                 </Box>
             </Dialog>

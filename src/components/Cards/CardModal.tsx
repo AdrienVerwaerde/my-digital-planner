@@ -1,6 +1,6 @@
 
 import { Box, Button, Card, CardContent, CircularProgress, IconButton, List, ListItem, Modal, Stack, Typography, useMediaQuery } from '@mui/material'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { EventAccordion } from '../Events/EventAccordion';
 import { useFormattedDate } from '@/app/hooks/useFormattedDate';
 import { Close } from '@mui/icons-material';
@@ -17,8 +17,11 @@ interface CardModalProps {
         time: string;
         availableCount: number;
         isUserParticipating: boolean;
+        createdBy: { id: string; };
     }[]
     refreshEvents: () => Promise<void>;
+    onDelete: (eventId: string) => Promise<void>
+    canDelete: boolean
 }
 
 
@@ -52,8 +55,21 @@ const CardModal = ({ isModalOpen, handleCloseModal, date, events, refreshEvents 
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const isMobile = useMediaQuery('(max-width: 640px)')
     const [isAvailable, setIsAvailable] = useState<boolean>(false)
+    const [currentUser, setCurrentUser] = useState<{ id: string; role: string } | null>(null)
 
+    useEffect(() => {
+        const fetchCurrentUser = async () => {
+            try {
+                const res = await fetch('/api/me')
+                const data = await res.json()
+                setCurrentUser(data)
+            } catch (err) {
+                console.error("Error fetching user", err)
+            }
+        }
 
+        fetchCurrentUser()
+    }, [])
 
     const handleClose = () => {
         handleCloseModal(false);
@@ -100,6 +116,18 @@ const CardModal = ({ isModalOpen, handleCloseModal, date, events, refreshEvents 
         }
     }
 
+    const handleDeleteEvent = async (eventId: string) => {
+        const confirm = window.confirm("Supprimer cet événement ?")
+        if (!confirm) return
+
+        try {
+            await fetch(`/api/user-events/${eventId}`, { method: 'DELETE' })
+            await refreshEvents()
+        } catch (err) {
+            console.error("Erreur suppression :", err)
+        }
+    }
+
     return (
         <Modal
             open={isModalOpen}
@@ -132,6 +160,10 @@ const CardModal = ({ isModalOpen, handleCloseModal, date, events, refreshEvents 
                                             <EventAccordion
                                                 event={event}
                                                 onToggle={handleToggleParticipation}
+                                                onDelete={handleDeleteEvent}
+                                                canDelete={
+                                                    !!currentUser && (currentUser.id === event.createdBy?.id || currentUser.role === 'ADMIN')
+                                                }
                                             />
                                         </ListItem>
                                     ))

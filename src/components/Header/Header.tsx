@@ -21,7 +21,7 @@ export const Header = () => {
                 </Box>
             }
             {isMobile &&
-                <Divider />}
+                <Divider sx={{backgroundColor: 'white', borderColor: 'white', opacity: 0.5}} />}
             <Box sx={{ display: 'flex', flexDirection: isMobile ? 'row' : 'column', alignItems: 'center', justifyContent: 'center', gap: 2, p: '1rem' }}>
                 <img src='/images/LOGO_MDS_WHITEBG.png' width={isMobile ? 100 : 350} />
                 <Typography

@@ -29,7 +29,7 @@ export async function GET() {
                     link: true,
                 },
             },
-            createdBy: true,
+            createdBy: { select: { id: true, role: true } },
             participants: true,
             Event: {
                 select: {

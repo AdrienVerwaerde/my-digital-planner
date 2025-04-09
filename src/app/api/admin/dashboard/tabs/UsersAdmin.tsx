@@ -130,7 +130,8 @@ export default function UsersAdmin() {
                                 <TableCell>{user.name}</TableCell>
                                 <TableCell>{user.email}</TableCell>
                                 <TableCell>{user.role}</TableCell>
-                                <TableCell sx={{ display: 'flex', gap: 1 }}>
+                                <TableCell>
+                                <Box sx={{ display: 'flex', gap: 1 }}>
                                     <IconButton
                                         title="Éditer"
                                         sx={{ backgroundColor: "secondary.main", '&:hover': { backgroundColor: "primary.main" } }}
@@ -143,6 +144,7 @@ export default function UsersAdmin() {
                                         onClick={() => handleDelete(user.id)}>
                                         <Delete fontSize='small' sx={{ color: "white" }} />
                                     </IconButton>
+                                    </Box>
                                 </TableCell>
                             </TableRow>
                         ))}
