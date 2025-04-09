@@ -1,8 +1,7 @@
 'use client'
 
 import { Card, CardContent, Typography, Box, useMediaQuery } from '@mui/material'
-import dayjs from 'dayjs'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import CardModal from './CardModal'
 import { useFormattedDate } from '@/app/hooks/useFormattedDate'
 
@@ -18,6 +17,7 @@ type DayCardProps = {
         time: string;
         availableCount: number;
         isUserParticipating: boolean;
+        createdBy: { id: string; };
     }[]
     refreshEvents: () => Promise<void>
     onClick?: () => void
@@ -100,6 +100,7 @@ const DayCard = ({ date, dimmed, isPast, today, events = [], refreshEvents }: Da
                 date={date}
                 events={events}
                 refreshEvents={refreshEvents}
+                
             />
         </>
     )

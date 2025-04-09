@@ -2,7 +2,6 @@
 
 import {
     Box,
-    Typography,
     useMediaQuery,
 } from '@mui/material'
 import dayjs from 'dayjs'
@@ -24,6 +23,7 @@ type CalendarEvent = {
     availableCount: number
     isUserParticipating: boolean
     date: string
+    createdBy: { id: string; };
 }
 
 export const CustomCalendar = () => {

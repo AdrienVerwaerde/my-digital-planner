@@ -1,5 +1,5 @@
 
-import { Box, Button, Card, CardContent, CircularProgress, IconButton, List, ListItem, Modal, Stack, Typography, useMediaQuery } from '@mui/material'
+import { Box, Button, Card, CardContent, CircularProgress, IconButton, List, ListItem, Modal, Typography, useMediaQuery } from '@mui/material'
 import { useEffect, useState } from 'react';
 import { EventAccordion } from '../Events/EventAccordion';
 import { useFormattedDate } from '@/app/hooks/useFormattedDate';
@@ -20,8 +20,8 @@ interface CardModalProps {
         createdBy: { id: string; };
     }[]
     refreshEvents: () => Promise<void>;
-    onDelete: (eventId: string) => Promise<void>
-    canDelete: boolean
+    onDelete?: (eventId: string) => Promise<void>;
+    canDelete?: boolean;
 }
 
 

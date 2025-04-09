@@ -8,7 +8,7 @@ export async function DELETE(_: Request, { params }: { params: Promise<{ id: str
     return NextResponse.json({ success: true });
 }
 
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
     const session = await auth();
 
     if (!session?.user?.email) {
@@ -20,7 +20,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
     try {
         // Clear existing locations
         await prisma.event.update({
-            where: { id: params.id },
+            where: { id: (await params).id },
             data: {
                 locations: { set: [] },
             },
@@ -28,7 +28,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
 
         // Update activity and new locations
         const updatedEvent = await prisma.event.update({
-            where: { id: params.id },
+            where: { id: (await params).id },
             data: {
                 activity,
                 locations: {

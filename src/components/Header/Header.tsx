@@ -1,11 +1,10 @@
 'use client'
 
-import { Box, Divider, Stack, Typography, useMediaQuery } from '@mui/material'
-import React, { useEffect, useState } from 'react'
+import { Box, Divider, Typography, useMediaQuery } from '@mui/material'
+import React from 'react'
 import GreetMessage from './GreetMessage'
 import LogoutButton from '../Login/LogoutButton'
 import { useSession } from 'next-auth/react'
-import LoginButton from '../Login/LoginButton'
 
 export const Header = () => {
     const isMobile = useMediaQuery('(max-width: 640px)')
