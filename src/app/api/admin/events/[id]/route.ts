@@ -1,16 +1,12 @@
 
-import { prisma } from '@/lib/prisma'
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '../../../../../../auth';
+import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+import { auth } from "../../../../../../auth";
 
-export async function DELETE(
-    _: NextRequest,
-    { params }: { params: { id: string } }
-) {
-    await prisma.event.delete({ where: { id: params.id } })
-    return NextResponse.json({ success: true })
+export async function DELETE(_: Request, { params }: { params: { id: string } }) {
+    await prisma.event.delete({ where: { id: params.id } });
+    return NextResponse.json({ success: true });
 }
-
 
 export async function PATCH(req: Request, { params }: { params: { id: string } }) {
     const session = await auth();
@@ -19,21 +15,22 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const eventId = params.id;
-    const { activity, date, locationIds } = await req.json();
+    const { activity, locationIds } = await req.json();
 
     try {
+        // Clear existing locations
         await prisma.event.update({
-            where: { id: eventId },
+            where: { id: params.id },
             data: {
                 locations: { set: [] },
             },
         });
+
+        // Update activity and new locations
         const updatedEvent = await prisma.event.update({
-            where: { id: eventId },
+            where: { id: params.id },
             data: {
                 activity,
-                date: new Date(date),
                 locations: {
                     connect: locationIds.map((id: string) => ({ id })),
                 },
@@ -49,4 +46,3 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
         return NextResponse.json({ error: "Failed to update event" }, { status: 500 });
     }
 }
-

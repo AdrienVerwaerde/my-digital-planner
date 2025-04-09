@@ -1,3 +1,4 @@
+
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth } from "../../../../../auth";
@@ -7,7 +8,7 @@ export async function GET() {
         include: {
             locations: { select: { id: true, name: true } },
         },
-        orderBy: { date: 'asc' },
+        orderBy: { activity: 'asc' },
     });
     return NextResponse.json(events);
 }
@@ -19,7 +20,7 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { activity, date, locationIds } = await req.json();
+    const { activity, locationIds } = await req.json();
 
     const user = await prisma.user.findUnique({
         where: { email: session.user.email },
@@ -34,16 +35,13 @@ export async function POST(req: Request) {
         const event = await prisma.event.create({
             data: {
                 activity,
-                date: new Date(date),
                 createdById: user.id,
                 locations: {
                     connect: locationIds.map((id: string) => ({ id })),
                 },
             },
-            include: {
-                locations: true,
-            },
         });
+
 
         return NextResponse.json(event);
     } catch (error) {
@@ -51,4 +49,3 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: "Event creation failed" }, { status: 500 });
     }
 }
-

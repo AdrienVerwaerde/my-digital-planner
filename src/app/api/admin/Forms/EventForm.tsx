@@ -21,21 +21,18 @@ import dayjs from "dayjs"
 type Event = {
     id: string
     activity: string
-    date: string
     locations: { id: string; name: string }[]
 }
 
 type Props = {
     open: boolean
     onClose: () => void
-    onSubmit: (data: { activity: string; date: string; locationIds: string[] }) => void
+    onSubmit: (data: { activity: string; locationIds: string[] }) => void
     event?: Event | null
 }
 
 export default function EventForm({ open, onClose, onSubmit, event }: Props) {
     const [activity, setActivity] = useState('')
-    const [dateOnly, setDateOnly] = useState('')
-    const [timeOnly, setTimeOnly] = useState('')
     const [locationIds, setLocationIds] = useState<string[]>([])
     const [locations, setLocations] = useState<{ id: string; name: string }[]>([])
     const [isLoading, setIsLoading] = useState(false)
@@ -48,29 +45,23 @@ export default function EventForm({ open, onClose, onSubmit, event }: Props) {
 
     useEffect(() => {
         if (event) {
-            const date = dayjs(event.date)
             setActivity(event.activity)
-            setDateOnly(date.format('YYYY-MM-DD'))
-            setTimeOnly(date.format('HH:mm'))
             setLocationIds(event.locations?.map(loc => loc.id) || [])
         } else {
             setActivity('')
-            setDateOnly('')
-            setTimeOnly('')
             setLocationIds([])
         }
     }, [event, open])
 
     const handleSubmit = async () => {
-        if (!activity || !dateOnly || !timeOnly || locationIds.length === 0) {
+        if (!activity || locationIds.length === 0) {
             return alert("Tous les champs sont requis.")
         }
 
         setIsLoading(true)
-        const isoDate = dayjs(`${dateOnly}T${timeOnly}`).toISOString()
 
         try {
-            await onSubmit({ activity, date: isoDate, locationIds })
+            await onSubmit({ activity, locationIds })
         } catch (err) {
             console.error("Error during form submission", err)
         } finally {
@@ -88,18 +79,6 @@ export default function EventForm({ open, onClose, onSubmit, event }: Props) {
                     label="Activité"
                     value={activity}
                     onChange={(e) => setActivity(e.target.value)}
-                />
-                <Typography>Date</Typography>
-                <TextField
-                    type="date"
-                    value={dateOnly}
-                    onChange={(e) => setDateOnly(e.target.value)}
-                />
-                <Typography>Heure</Typography>
-                <TextField
-                    type="time"
-                    value={timeOnly}
-                    onChange={(e) => setTimeOnly(e.target.value)}
                 />
                 <Select
                     multiple

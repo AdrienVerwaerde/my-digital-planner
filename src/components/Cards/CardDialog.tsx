@@ -53,18 +53,20 @@ function EventCreateDialog({ open, onClose, selectedValue, selectedDate, refresh
 
     const handleSubmit = async () => {
         setIsLoading(true);
+        console.log("selectedTime:", selectedTime)
+        console.log("locationId:", locationId)
 
         if (!selectedTime || !locationId) {
-            setFormError("Choisis l'heure et le lieu.");
+            setFormError("Choisis le lieu et l'heure");
             setIsLoading(false);
             return;
         }
 
         setFormError('');
         try {
-            const isoDate = dayjs(`${selectedDate}T${selectedTime?.format('HH:mm')}`).toISOString()
+            const isoDate = dayjs(`${selectedDate}T${selectedTime.format('HH:mm')}`).toISOString()
 
-            const res = await fetch('/api/events/create', {
+            const res = await fetch('/api/user-events', {
                 method: 'POST',
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -85,6 +87,19 @@ function EventCreateDialog({ open, onClose, selectedValue, selectedDate, refresh
             setIsLoading(false);
         }
     };
+
+    React.useEffect(() => {
+        if (open) {
+            setSelectedTime(null)
+            setLocationId('')
+            setFormError('')
+            fetch('/api/locations')
+                .then(res => res.json())
+                .then(data => setLocations(data))
+                .catch(err => console.error("Failed to load locations", err))
+        }
+    }, [open])
+
 
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -108,6 +123,7 @@ function EventCreateDialog({ open, onClose, selectedValue, selectedDate, refresh
                     <TimePicker
                         ampm={false}
                         value={selectedTime}
+                        onChange={(value) => setSelectedTime(value)}
                         slotProps={{
                             textField: {
                                 placeholder: 'Choisis une heure',
@@ -197,7 +213,7 @@ export default function CardDialogDemo({ date, refreshEvents }: CardDialogDemoPr
 
 
     const handleClickOpen = async () => {
-        const res = await fetch('/api/events/event-types');
+        const res = await fetch('/api/event-types');
         const data = await res.json();
         setEventTypes(data);
         setOpen(true);

@@ -33,7 +33,7 @@ export const CustomCalendar = () => {
 
     useEffect(() => {
         const fetchEvents = async () => {
-            const res = await fetch('/api/events')
+            const res = await fetch('/api/user-events')
             const data = await res.json()
             setEvents(data)
         }
@@ -95,7 +95,7 @@ export const CustomCalendar = () => {
     }, [events])
 
     const refreshEvents = async () => {
-        const res = await fetch('/api/events')
+        const res = await fetch('/api/user-events')
         const data = await res.json()
         setEvents(data)
     }

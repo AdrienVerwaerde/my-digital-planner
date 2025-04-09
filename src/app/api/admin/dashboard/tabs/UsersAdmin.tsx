@@ -17,7 +17,7 @@ type User = {
 export default function UsersAdmin() {
     const [users, setUsers] = useState<User[]>([])
     const [error, setError] = useState<string | null>(null)
-    const [loading, setLoading] = useState(true)
+    const [isLoading, setIsLoading] = useState(true)
     const [dialogOpen, setDialogOpen] = useState(false)
     const [dialogMode, setDialogMode] = useState<'create' | 'edit'>('create')
     const [editingUser, setEditingUser] = useState<User | null>(null)
@@ -82,7 +82,7 @@ export default function UsersAdmin() {
             } catch (err: any) {
                 setError(err.message)
             } finally {
-                setLoading(false)
+                setIsLoading(false)
             }
         }
 
@@ -103,13 +103,11 @@ export default function UsersAdmin() {
         setUsers(users => users.filter(u => u.id !== id))
     }
 
-    if (loading) return
-    <Stack direction="row" gap={1}>
+    if (isLoading) return <Box sx={{ mt: 5, display: 'flex', alignItems: 'center', gap: 1 }}>
         <CircularProgress size={16} />
-        <Typography>
-            Chargement...
-        </Typography>
-    </Stack>
+        <Typography>Chargement...</Typography>
+    </Box>
+
     if (error) return <Typography>Erreur : {error}</Typography>
 
     return (

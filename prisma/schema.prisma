@@ -8,13 +8,16 @@ datasource db {
 }
 
 model User {
-  id              String   @id @default(cuid())
-  name            String?
-  email           String   @unique
-  role            Role     @default(STUDENT)
-  createdAt       DateTime @default(now())
-  eventsCreated   Event[]  @relation("UserEvents") // 1-to-many
-  attendingEvents Event[]  @relation("EventParticipants") // many-to-many
+  id        String   @id @default(cuid())
+  name      String?
+  email     String   @unique
+  role      Role     @default(STUDENT)
+  createdAt DateTime @default(now())
+
+  // Relations
+  eventsCreated   Event[]     @relation("AdminCreatedEvents") // Events as templates
+  userEvents      UserEvent[] @relation("UserEvents") // Events actually planned by user
+  attendingEvents UserEvent[] @relation("UserEventParticipants")
 
   accounts         Account[]
   sessions         Session[]
@@ -23,27 +26,42 @@ model User {
 }
 
 model Event {
-  id           String     @id @default(cuid())
-  date         DateTime
-  activity     String
-  locations    Location[] @relation("EventLocations")
-  createdBy    User       @relation("UserEvents", fields: [createdById], references: [id])
-  createdById  String
-  participants User[]     @relation("EventParticipants") // many-to-many
+  id          String     @id @default(cuid())
+  activity    String
+  locations   Location[] @relation("EventLocations")
+  createdBy   User       @relation("AdminCreatedEvents", fields: [createdById], references: [id])
+  createdById String
+
+  userEvents UserEvent[] // Inverse of relation from UserEvent to Event
+}
+
+model UserEvent {
+  id          String   @id @default(cuid())
+  activity    String
+  date        DateTime
+  location    Location @relation(fields: [locationId], references: [id])
+  locationId  String
+  createdBy   User     @relation("UserEvents", fields: [createdById], references: [id])
+  createdById String
+
+  participants User[]  @relation("UserEventParticipants")
+  Event        Event?  @relation(fields: [eventId], references: [id])
+  eventId      String?
+}
+
+model Location {
+  id          String      @id @default(cuid())
+  name        String
+  address     String
+  createdBy   User        @relation(fields: [createdById], references: [id])
+  createdById String
+  events      Event[]     @relation("EventLocations") // Templates
+  userEvents  UserEvent[]
 }
 
 enum Role {
   STUDENT
   ADMIN
-}
-
-model Location {
-  id          String  @id @default(cuid())
-  name        String
-  address     String
-  createdBy   User    @relation(fields: [createdById], references: [id])
-  createdById String
-  events      Event[] @relation("EventLocations")
 }
 
 model Availability {

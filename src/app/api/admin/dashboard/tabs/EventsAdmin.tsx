@@ -12,7 +12,6 @@ import EventForm from '../../Forms/EventForm'
 type Event = {
   id: string
   activity: string
-  date: string
   locations: { id: string, name: string }[]
 }
 
@@ -32,7 +31,6 @@ export default function EventsAdmin() {
 
   const handleDialogSubmit = async (data: {
     activity: string
-    date: string
     locationIds: string[]
   }) => {
     try {
@@ -113,7 +111,6 @@ export default function EventsAdmin() {
           <TableHead>
             <TableRow>
               <TableCell>Activité</TableCell>
-              <TableCell>Date</TableCell>
               <TableCell>Lieu(x)</TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
@@ -122,7 +119,6 @@ export default function EventsAdmin() {
             {events.map(event => (
               <TableRow key={event.id}>
                 <TableCell>{event.activity}</TableCell>
-                <TableCell>{new Date(event.date).toLocaleString('fr-FR')}</TableCell>
                 <TableCell>
                   {event.locations.map(loc => (
                     <div key={loc.id}>{loc.name}</div>

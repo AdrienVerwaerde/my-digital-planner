@@ -72,7 +72,7 @@ const CardModal = ({ isModalOpen, handleCloseModal, date, events, refreshEvents 
             // Update participation
             const submissionPromises = events.map(event => {
                 const isParticipating = responses[event.id] ?? event.isUserParticipating
-                return fetch('/api/events/participate', {
+                return fetch('/api/user-events/participate', {
                     method: 'POST',
                     body: JSON.stringify({ eventId: event.id, isParticipating }),
                     headers: { 'Content-Type': 'application/json' },
