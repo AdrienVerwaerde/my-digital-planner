@@ -21,25 +21,39 @@ export async function GET() {
 
     const userEvents = await prisma.userEvent.findMany({
         include: {
-            location: true,
+            location: {
+                select: {
+                    id: true,
+                    name: true,
+                    address: true,
+                    link: true,
+                },
+            },
+            createdBy: true,
             participants: true,
+            Event: {
+                select: {
+                    id: true,
+                    activity: true,
+                },
+            },
         },
         orderBy: {
             date: 'asc',
         },
     })
-
-    const mapped = userEvents.map(event => ({
-        id: event.id,
+    
+    const mappedUserEvents = userEvents.map(event => ({
+        ...event,
         name: event.activity,
-        locations: [{ id: event.location.id, name: event.location.name }],
-        time: event.date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        locations: [event.location],
+        time: new Date(event.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         date: event.date.toISOString().split('T')[0],
         availableCount: event.participants.length,
-        isUserParticipating: event.participants.some(p => p.id === user.id),
+        isUserParticipating: event.participants.some(p => p.id === event.createdBy.id),
     }))
-
-    return NextResponse.json(mapped)
+    
+    return NextResponse.json(mappedUserEvents)
 }
 
 

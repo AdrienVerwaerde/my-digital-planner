@@ -1,7 +1,10 @@
 import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Checkbox, Divider, FormControlLabel, Stack, Typography } from '@mui/material'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import MyLocationIcon from '@mui/icons-material/MyLocation';
 import dayjs from 'dayjs'
 import { useState } from 'react';
+import { Place } from '@mui/icons-material';
+import Link from 'next/link';
 
 interface EventAccordionProps {
     event: {
@@ -10,6 +13,8 @@ interface EventAccordionProps {
         locations: {
             id: string;
             name: string;
+            address: string;
+            link: string;
         }[];
         time: string;
         availableCount: number;
@@ -40,13 +45,28 @@ export const EventAccordion = ({ event, onToggle }: EventAccordionProps) => {
             <AccordionSummary expandIcon={<ExpandMoreIcon sx={{ color: isParticipating ? "white" : "secondary.main" }} />}>
                 <Typography sx={{ fontFamily: 'Consolas, monospace' }}>{event.name}</Typography>
             </AccordionSummary>
-            <AccordionDetails>
+            <AccordionDetails sx={{ pt: 0 }}>
                 {event.locations?.map(loc => (
-                    <Typography key={loc.id}>{loc.name}</Typography>
+                    <Box key={loc.id}>
+                        <Typography
+                            sx={{fontFamily: 'Roboto, sans-serif'}}>
+                            {loc.name}
+                        </Typography>
+                        <Typography sx={{
+                            fontFamily: 'Roboto, sans-serif', fontSize: '0.875rem', opacity: 0.6, cursor: "pointer",
+                            color: "inherit",
+                            transition: "all 0.2s ease",
+                            '&:hover': {
+                                opacity: 1
+                            },
+                        }}>
+                            <Place fontSize='small' />
+                            {loc.address}
+                        </Typography>
+                    </Box>
                 ))}
-
-                <Typography>{event.time}</Typography>
-                <Divider sx={{ my: 1 }} />
+                <Typography sx={{ mt: 1 }}>{event.time}</Typography>
+                <Divider sx={{ my: 1, backgroundColor: isParticipating ? "white" : "secondary.main", borderColor: isParticipating ? "white" : "secondary.main" }} />
                 <Stack direction="row" justifyContent="space-between" alignItems="center">
                     <Typography variant="caption">
                         <b>{event.availableCount}</b> participant.es
@@ -76,4 +96,5 @@ export const EventAccordion = ({ event, onToggle }: EventAccordionProps) => {
             </AccordionDetails>
         </Accordion>
     )
+
 }

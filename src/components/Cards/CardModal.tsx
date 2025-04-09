@@ -13,7 +13,7 @@ interface CardModalProps {
     events: {
         id: string;
         name: string;
-        locations: { id: string; name: string }[];
+        locations: { id: string; name: string, address: string, link: string }[];
         time: string;
         availableCount: number;
         isUserParticipating: boolean;
@@ -107,67 +107,51 @@ const CardModal = ({ isModalOpen, handleCloseModal, date, events, refreshEvents 
 
         >
             <Card sx={isMobile ? mobileModalStyle : modalStyle}>
-                <CardContent sx={{ display: 'flex', flexDirection: 'column', color: "secondary.main", height: "100%", gap: 1 }}>
+                <CardContent sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', color: "secondary.main", height: "100%", gap: 1 }}>
                     <Box sx={{
-                        flex: 1,
-                        overflowY: 'auto',
-                        pr: 1,
-                        scrollbarWidth: 'none',
-                        '&::-webkit-scrollbar': {
-                            display: 'none',
-                        },
-                    }} >
-                        <Typography variant="subtitle2" gutterBottom sx={{ fontWeight: 600, fontFamily: 'Roboto, sans-serif' }}>
-                            {formattedDate}
-                        </Typography>
-                        <IconButton onClick={handleClose} sx={{ position: "absolute", top: 5, right: 5 }}>
-                            <Close fontSize="small" />
-                        </IconButton>
-                        <List sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                            {events.length > 0 ? (
-                                events.map((event) => (
-                                    <ListItem key={event.id} sx={{ width: '100%', p: 0 }}>
-                                        <EventAccordion
-                                            key={event.id}
-                                            event={event}
-                                            onToggle={handleToggleParticipation}
-                                        />
-                                    </ListItem>
-                                ))
-                            ) : (
-                                <Typography
-                                    variant="caption"
-                                    color="text.secondary"
-                                    sx={{ fontFamily: 'Consolas, monospace' }}
-                                >
-                                    Aucun événement
-                                </Typography>
-                            )}
-                        </List>
-                        {/* <FormControlLabel
-                            control={
-                                <Checkbox
-                                    checked={isAvailable}
-                                    disableRipple
-                                    onChange={(e) => {
-                                        setIsAvailable(e.target.checked)
-                                    }}
-                                    sx={{
-                                        color: "secondary.main",
-                                        '&.Mui-checked': {
-                                            color: isAvailable? "primary.main" : "secondary.main",
-                                        },
-                                        '& .MuiSvgIcon-root': { fontSize: 24 }
-                                    }}
-                                />
-                            }
-                            label="Je suis disponible !"
-                            sx={{ mt: 2, color: isAvailable ? "primary.main" : "secondary.main", transition: "all 0.2s ease" }}
-                        /> */}
-                        <CardDialogDemo
-                            date={date}
-                            refreshEvents={refreshEvents} />
+                        flex: 1, display: 'flex', flexDirection: 'column', overflowY: 'auto', scrollbarWidth: 'none',
+                        '&::-webkit-scrollbar': { display: 'none' },
+                    }}>
+                        <Box sx={{
+                            flex: 1,
+
+                            pr: 1,
+
+                        }}>
+                            <Typography variant="subtitle2" gutterBottom sx={{ fontWeight: 600, fontFamily: 'Roboto, sans-serif' }}>
+                                {formattedDate}
+                            </Typography>
+                            <IconButton onClick={handleClose} sx={{ position: "absolute", zIndex: "1000", '&:hover': { backgroundColor: "#F5F5F5" }, top: 5, right: 5 }}>
+                                <Close fontSize="small" />
+                            </IconButton>
+
+                            <List sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                                {events.length > 0 ? (
+                                    events.map((event) => (
+                                        <ListItem key={event.id} sx={{ width: '100%', p: 0 }}>
+                                            <EventAccordion
+                                                event={event}
+                                                onToggle={handleToggleParticipation}
+                                            />
+                                        </ListItem>
+                                    ))
+                                ) : (
+                                    <Typography
+                                        variant="caption"
+                                        color="text.secondary"
+                                        sx={{ fontFamily: 'Consolas, monospace' }}
+                                    >
+                                        Aucun événement
+                                    </Typography>
+                                )}
+                            </List>
+                        </Box>
+
+                        <Box sx={{ pt: 1 }}>
+                            <CardDialogDemo date={date} refreshEvents={refreshEvents} />
+                        </Box>
                     </Box>
+
                     <Button
                         sx={{ mt: 'auto' }}
                         onClick={handleSubmit}

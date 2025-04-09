@@ -14,7 +14,7 @@ type DayCardProps = {
     events: {
         id: string;
         name: string;
-        locations: { id: string; name: string }[];
+        locations: { id: string; name: string, address: string, link:string }[];
         time: string;
         availableCount: number;
         isUserParticipating: boolean;

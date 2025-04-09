@@ -11,11 +11,12 @@ import Dialog from '@mui/material/Dialog';
 import PersonIcon from '@mui/icons-material/Person';
 import AddIcon from '@mui/icons-material/Add';
 import { blue } from '@mui/material/colors';
-import { Box, CircularProgress, Divider, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
+import { Box, CircularProgress, Divider, FormControl, IconButton, InputLabel, MenuItem, Select, SelectChangeEvent, Stack, Typography } from '@mui/material';
 import { LocalizationProvider, TimePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 import dayjs from 'dayjs';
+import { Add } from '@mui/icons-material';
 
 type CardDialogProps = {
     open: boolean;
@@ -37,7 +38,7 @@ function EventCreateDialog({ open, onClose, selectedValue, selectedDate, refresh
     const [formError, setFormError] = React.useState('');
     const [isLoading, setIsLoading] = React.useState<boolean>(false);
     const [locationId, setLocationId] = React.useState('');
-    const [locations, setLocations] = React.useState<{ id: string, address: string }[]>([]);
+    const [locations, setLocations] = React.useState<{ id: string, address: string, name: string }[]>([]);
     const handleChange = (event: SelectChangeEvent) => {
         setLocationId(event.target.value as string);
     };
@@ -114,9 +115,13 @@ function EventCreateDialog({ open, onClose, selectedValue, selectedDate, refresh
                             value={locationId}
                             label="Lieu"
                             onChange={handleChange}
+
                         >
                             {locations.map(loc => (
-                                <MenuItem key={loc.id} value={loc.id}>{loc.address}</MenuItem>
+                                <MenuItem key={loc.id} value={loc.id} sx={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
+                                    <Typography sx={{ fontFamily: 'Roboto, sans-serif' }}>{loc.name}</Typography>
+                                    <Typography sx={{ fontFamily: 'Roboto, sans-serif', fontSize: '0.875rem', opacity: 0.6 }}>{loc.address}</Typography>
+                                </MenuItem>
                             ))}
                         </Select>
                     </FormControl>
@@ -126,7 +131,7 @@ function EventCreateDialog({ open, onClose, selectedValue, selectedDate, refresh
                         onChange={(value) => setSelectedTime(value)}
                         slotProps={{
                             textField: {
-                                placeholder: 'Choisis une heure',
+                                placeholder: 'Heure',
                                 fullWidth: true,
                                 size: 'small',
                                 sx: {
@@ -229,10 +234,14 @@ export default function CardDialogDemo({ date, refreshEvents }: CardDialogDemoPr
 
     return (
         <Box>
-            <Divider sx={{ my: 1}} />
-            <Button variant="outlined" sx={{width: "100%", p: 1, mt: 1}} onClick={handleClickOpen}>
-                Proposer une sortie
-            </Button>
+            <Stack direction="row" alignItems="center" gap={1} sx={{my: 2}}>
+                <IconButton title="Proposer une activité" sx={{ backgroundColor: "secondary.main", color: "white", '&:hover': { backgroundColor: 'primary.main' } }} onClick={handleClickOpen}>
+                    <AddIcon fontSize='medium' />
+                </IconButton>
+                <Typography sx={{fontFamily: "Roboto, sans-serif"}}>
+                    Proposer une sortie
+                </Typography>
+            </Stack>
             <CardDialog
                 selectedValue={selectedValue}
                 open={open}
