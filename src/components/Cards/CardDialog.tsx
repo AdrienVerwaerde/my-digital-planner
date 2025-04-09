@@ -11,7 +11,7 @@ import Dialog from '@mui/material/Dialog';
 import PersonIcon from '@mui/icons-material/Person';
 import AddIcon from '@mui/icons-material/Add';
 import { blue } from '@mui/material/colors';
-import { Box, CircularProgress, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
+import { Box, CircularProgress, Divider, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import { LocalizationProvider, TimePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
@@ -229,7 +229,8 @@ export default function CardDialogDemo({ date, refreshEvents }: CardDialogDemoPr
 
     return (
         <Box>
-            <Button variant="outlined" onClick={handleClickOpen}>
+            <Divider sx={{ my: 1}} />
+            <Button variant="outlined" sx={{width: "100%", p: 1, mt: 1}} onClick={handleClickOpen}>
                 Proposer une sortie
             </Button>
             <CardDialog
