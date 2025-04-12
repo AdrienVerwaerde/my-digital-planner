@@ -1,0 +1,5 @@
+-- CreateEnum
+CREATE TYPE "EventType" AS ENUM ('AUTRE', 'GAMING', 'JEUX_DE_SOCIETE', 'CULTURE', 'SCOLAIRE', 'ART', 'MUSIQUE', 'CODE_WEB_TECH', 'BAR_CLUB', 'SPORT');
+
+-- AlterTable
+ALTER TABLE "Event" ADD COLUMN     "type" "EventType" NOT NULL DEFAULT 'AUTRE';

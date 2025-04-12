@@ -1,10 +1,11 @@
 'use client'
 
-import { Box, Divider, Typography, useMediaQuery } from '@mui/material'
+import { Box, Divider, Stack, Typography, useMediaQuery } from '@mui/material'
 import React from 'react'
 import GreetMessage from './GreetMessage'
 import LogoutButton from '../Login/LogoutButton'
 import { useSession } from 'next-auth/react'
+import AdminButton from '../AdminButton/AdminButton'
 
 export const Header = () => {
     const isMobile = useMediaQuery('(max-width: 640px)')
@@ -13,14 +14,17 @@ export const Header = () => {
 
     return (
         <Box sx={{ width: isMobile ? "inherit" : "100%", px: isMobile ? "0" : "2rem" }}>
-            {session && 
+            {session &&
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: isSmallScreen ? 'space-between' : 'flex-end', width: '100%', px: '1rem', my: '1rem', gap: isMobile ? '0' : '2rem' }}>
                     <GreetMessage />
-                    <LogoutButton />
+                    <Stack direction="row" gap={1}>
+                        {session.user.role === 'ADMIN' && <AdminButton />}
+                        <LogoutButton />
+                    </Stack>
                 </Box>
             }
             {isMobile &&
-                <Divider sx={{backgroundColor: 'white', borderColor: 'white', opacity: 0.5}} />}
+                <Divider sx={{ backgroundColor: 'white', borderColor: 'white', opacity: 0.5 }} />}
             <Box sx={{ display: 'flex', flexDirection: isMobile ? 'row' : 'column', alignItems: 'center', justifyContent: 'center', gap: 2, p: '1rem' }}>
                 <img src='/images/LOGO_MDS_WHITEBG.png' width={isMobile ? 100 : 350} />
                 <Typography

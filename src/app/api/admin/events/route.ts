@@ -20,7 +20,7 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { activity, locationIds } = await req.json();
+    const { activity, locationIds, type, proposable } = await req.json();
 
     const user = await prisma.user.findUnique({
         where: { email: session.user.email },
@@ -35,6 +35,8 @@ export async function POST(req: Request) {
         const event = await prisma.event.create({
             data: {
                 activity,
+                type,
+                proposable,
                 createdById: user.id,
                 locations: {
                     connect: locationIds.map((id: string) => ({ id })),

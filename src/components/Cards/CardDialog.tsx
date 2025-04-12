@@ -8,21 +8,20 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
-import PersonIcon from '@mui/icons-material/Person';
+
 import AddIcon from '@mui/icons-material/Add';
-import { blue } from '@mui/material/colors';
 import { Box, CircularProgress, FormControl, IconButton, InputLabel, MenuItem, Select, SelectChangeEvent, Stack, Typography } from '@mui/material';
 import { LocalizationProvider, TimePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 import dayjs from 'dayjs';
-import { Add } from '@mui/icons-material';
+import { activityTypes } from '@/app/data/activityTypesList';
 
 type CardDialogProps = {
     open: boolean;
     selectedValue: string;
     onClose: (value: string) => void;
-    eventTypes: string[];
+    eventTypes: { activity: string; type: string }[];
 }
 
 type EventCreateDialogProps = {
@@ -31,26 +30,20 @@ type EventCreateDialogProps = {
     selectedValue: string;
     selectedDate: string;
     refreshEvents: () => Promise<void>;
+    locations: { id: string, address: string, name: string }[]
 }
 
-function EventCreateDialog({ open, onClose, selectedValue, selectedDate, refreshEvents }: EventCreateDialogProps) {
+
+function EventCreateDialog({ open, onClose, selectedValue, selectedDate, refreshEvents, locations }: EventCreateDialogProps) {
     const [selectedTime, setSelectedTime] = React.useState<dayjs.Dayjs | null>(null);
     const [formError, setFormError] = React.useState('');
     const [isLoading, setIsLoading] = React.useState<boolean>(false);
     const [locationId, setLocationId] = React.useState('');
-    const [locations, setLocations] = React.useState<{ id: string, address: string, name: string }[]>([]);
+
+
     const handleChange = (event: SelectChangeEvent) => {
         setLocationId(event.target.value as string);
     };
-
-    React.useEffect(() => {
-        if (open) {
-            fetch('/api/locations')
-                .then(res => res.json())
-                .then(data => setLocations(data))
-                .catch(err => console.error("Failed to load locations", err));
-        }
-    }, [open]);
 
     const handleSubmit = async () => {
         setIsLoading(true);
@@ -94,10 +87,6 @@ function EventCreateDialog({ open, onClose, selectedValue, selectedDate, refresh
             setSelectedTime(null)
             setLocationId('')
             setFormError('')
-            fetch('/api/locations')
-                .then(res => res.json())
-                .then(data => setLocations(data))
-                .catch(err => console.error("Failed to load locations", err))
         }
     }, [open])
 
@@ -123,6 +112,7 @@ function EventCreateDialog({ open, onClose, selectedValue, selectedDate, refresh
                                     <Typography sx={{ fontFamily: 'Roboto, sans-serif', fontSize: '0.875rem', opacity: 0.6 }}>{loc.address}</Typography>
                                 </MenuItem>
                             ))}
+
                         </Select>
                     </FormControl>
                     <TimePicker
@@ -177,30 +167,33 @@ function CardDialog({ open, onClose, eventTypes, selectedValue }: CardDialogProp
         <Dialog onClose={() => onClose('')} open={open}>
             <DialogTitle sx={{ fontFamily: 'Consolas, monospace' }}>Sélectionner une activité</DialogTitle>
             <List sx={{ pt: 0, display: "flex", flexDirection: "column", alignItems: "center" }}>
-                {eventTypes.map((type) => (
-                    <ListItem disablePadding key={type}>
-                        <ListItemButton onClick={() => handleListItemClick(type)}>
-                            <ListItemAvatar>
-                                <Avatar sx={{ bgcolor: blue[100], color: blue[600] }}>
-                                    <PersonIcon />
-                                </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText primary={type} />
-                        </ListItemButton>
-                    </ListItem>
-                ))}
+                {eventTypes.map(({ activity, type }) => {
+                    const Icon = activityTypes(type);
+                    return (
+                        < ListItem disablePadding key={type} >
+                            <ListItemButton onClick={() => handleListItemClick(activity)}>
+                                <ListItemAvatar>
+                                    <Avatar sx={{ bgcolor: "primary.main", color: "white" }}>
+                                        {Icon}
+                                    </Avatar>
+                                </ListItemAvatar>
+                                <ListItemText primary={activity} />
+                            </ListItemButton>
+                        </ListItem>
+                    )
+                })}
                 <ListItem disablePadding>
                     <ListItemButton onClick={() => handleListItemClick('Autre')}>
                         <ListItemAvatar>
-                            <Avatar>
+                            <Avatar sx={{ bgcolor: "secondary.main", color: "white" }}>
                                 <AddIcon />
                             </Avatar>
                         </ListItemAvatar>
-                        <ListItemText primary="Proposer un nouveau type..." />
+                        <ListItemText primary="Proposer une autre activité" />
                     </ListItemButton>
                 </ListItem>
             </List>
-        </Dialog>
+        </Dialog >
     );
 }
 
@@ -212,9 +205,10 @@ type CardDialogDemoProps = {
 export default function CardDialogDemo({ date, refreshEvents }: CardDialogDemoProps) {
     const [open, setOpen] = React.useState(false);
     const [selectedValue, setSelectedValue] = React.useState('');
-    const [eventTypes, setEventTypes] = React.useState<string[]>([]);
+    const [eventTypes, setEventTypes] = React.useState<{ activity: string, type: string }[]>([]);
     const [isCreateDialogOpen, setIsCreateDialogOpen] = React.useState(false)
     const [proposedType, setProposedType] = React.useState<string | null>(null)
+    const [locations, setLocations] = React.useState<{ id: string, address: string, name: string }[]>([])
 
 
     const handleClickOpen = async () => {
@@ -224,21 +218,26 @@ export default function CardDialogDemo({ date, refreshEvents }: CardDialogDemoPr
         setOpen(true);
     };
 
-    const handleClose = (value: string) => {
+    const handleClose = async (value: string) => {
         setOpen(false)
+
         if (value) {
             setProposedType(value)
             setIsCreateDialogOpen(true)
-        }
-    }
 
+            // Fetch the locations linked to the event
+            const res = await fetch(`/api/event-types/${value}`)
+            const data = await res.json()
+            setLocations(data.locations)
+        }
+    };
     return (
         <Box>
-            <Stack direction="row" alignItems="center" gap={1} sx={{my: 2}}>
+            <Stack direction="row" alignItems="center" gap={1} sx={{ my: 2 }}>
                 <IconButton title="Proposer une activité" sx={{ backgroundColor: "secondary.main", color: "white", '&:hover': { backgroundColor: 'primary.main' } }} onClick={handleClickOpen}>
                     <AddIcon fontSize='medium' />
                 </IconButton>
-                <Typography sx={{fontFamily: "Roboto, sans-serif"}}>
+                <Typography sx={{ fontFamily: "Roboto, sans-serif" }}>
                     Proposer une sortie
                 </Typography>
             </Stack>
@@ -254,6 +253,7 @@ export default function CardDialogDemo({ date, refreshEvents }: CardDialogDemoPr
                 selectedValue={proposedType ?? ''}
                 selectedDate={date}
                 refreshEvents={refreshEvents}
+                locations={locations}
             />
         </Box>
     );

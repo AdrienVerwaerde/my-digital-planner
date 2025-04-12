@@ -14,20 +14,23 @@ import {
     Chip,
     SelectChangeEvent,
     CircularProgress,
+    FormControlLabel,
+    Checkbox,
 } from "@mui/material"
 import { useEffect, useState } from "react"
-import dayjs from "dayjs"
 
 type Event = {
     id: string
     activity: string
     locations: { id: string; name: string }[]
+    type: string
+    proposable: boolean
 }
 
 type Props = {
     open: boolean
     onClose: () => void
-    onSubmit: (data: { activity: string; locationIds: string[] }) => void
+    onSubmit: (data: { activity: string; locationIds: string[], type: string, proposable: boolean }) => void
     event?: Event | null
 }
 
@@ -36,6 +39,8 @@ export default function EventForm({ open, onClose, onSubmit, event }: Props) {
     const [locationIds, setLocationIds] = useState<string[]>([])
     const [locations, setLocations] = useState<{ id: string; name: string }[]>([])
     const [isLoading, setIsLoading] = useState(false)
+    const [type, setType] = useState('');
+    const [proposable, setProposable] = useState(true)
 
     useEffect(() => {
         fetch('/api/locations')
@@ -61,7 +66,7 @@ export default function EventForm({ open, onClose, onSubmit, event }: Props) {
         setIsLoading(true)
 
         try {
-            await onSubmit({ activity, locationIds })
+            await onSubmit({ activity, locationIds, type, proposable })
         } catch (err) {
             console.error("Error during form submission", err)
         } finally {
@@ -80,6 +85,24 @@ export default function EventForm({ open, onClose, onSubmit, event }: Props) {
                     value={activity}
                     onChange={(e) => setActivity(e.target.value)}
                 />
+                <TextField
+                    select
+                    label="Type"
+                    value={type}
+                    onChange={(e) => setType(e.target.value)}
+                    fullWidth
+                >
+                    <MenuItem value="AUTRE">Autre</MenuItem>
+                    <MenuItem value="GAMING">Gaming</MenuItem>
+                    <MenuItem value="JEUX_DE_SOCIETE">Jeux de Société</MenuItem>
+                    <MenuItem value="BAR_CLUB">Bar/Club/Resto</MenuItem>
+                    <MenuItem value="SPORT">Sport</MenuItem>
+                    <MenuItem value="CODE_WEB_TECH">Code/Web/Tech</MenuItem>
+                    <MenuItem value="ART">Art</MenuItem>
+                    <MenuItem value="CULTURE">Culture</MenuItem>
+                    <MenuItem value="SCOLAIRE">Scolaire</MenuItem>
+                    <MenuItem value="MUSIQUE">Musique</MenuItem>
+                </TextField>
                 <Select
                     multiple
                     value={locationIds}
@@ -105,6 +128,16 @@ export default function EventForm({ open, onClose, onSubmit, event }: Props) {
                         </MenuItem>
                     ))}
                 </Select>
+                <FormControlLabel
+                    control={
+                        <Checkbox
+                            checked={proposable}
+                            disableRipple
+                            onChange={(e) => setProposable(e.target.checked)}
+                        />
+                    }
+                    label="Proposable par les utilisateurs ?"
+                />
             </DialogContent>
             {isLoading ? (
                 <DialogActions>

@@ -12,7 +12,9 @@ import EventForm from '../../Forms/EventForm'
 type Event = {
   id: string
   activity: string
+  type: string
   locations: { id: string, name: string }[]
+  proposable: boolean
 }
 
 export default function EventsAdmin() {
@@ -120,17 +122,19 @@ export default function EventsAdmin() {
               <TableRow key={event.id}>
                 <TableCell>{event.activity}</TableCell>
                 <TableCell>
-                  {event.locations.map(loc => (
+                  {event.locations?.map(loc => (
                     <div key={loc.id}>{loc.name}</div>
                   ))}
                 </TableCell>
-                <TableCell sx={{ display: 'flex', gap: 1 }}>
-                  <IconButton title="Éditer" onClick={() => handleEdit(event)} sx={{ backgroundColor: "secondary.main", '&:hover': { backgroundColor: "primary.main" } }}>
-                    <Edit fontSize='small' sx={{ color: "white" }} />
-                  </IconButton>
-                  <IconButton title="Supprimer" onClick={() => handleDelete(event.id)} sx={{ backgroundColor: "error.main", '&:hover': { backgroundColor: "error.dark" } }}>
-                    <Delete fontSize='small' sx={{ color: "white" }} />
-                  </IconButton>
+                <TableCell>
+                  <Box sx={{ display: 'flex', gap: 1 }}>
+                    <IconButton title="Éditer" onClick={() => handleEdit(event)} sx={{ backgroundColor: "secondary.main", '&:hover': { backgroundColor: "primary.main" } }}>
+                      <Edit fontSize='small' sx={{ color: "white" }} />
+                    </IconButton>
+                    <IconButton title="Supprimer" onClick={() => handleDelete(event.id)} sx={{ backgroundColor: "error.main", '&:hover': { backgroundColor: "error.dark" } }}>
+                      <Delete fontSize='small' sx={{ color: "white" }} />
+                    </IconButton>
+                  </Box>
                 </TableCell>
               </TableRow>
             ))}

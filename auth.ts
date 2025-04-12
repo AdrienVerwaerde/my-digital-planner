@@ -38,7 +38,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                 })
             }
 
-            return true // allow sign-in
+            return true
+        },
+        async session({ session, user }) {
+            if (session.user) {
+                session.user.role = user.role as "ADMIN" | "STUDENT" | undefined;
+            }
+            return session
         },
     },
 })

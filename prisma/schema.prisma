@@ -25,9 +25,24 @@ model User {
   createdLocations Location[]
 }
 
+enum EventType {
+  AUTRE
+  GAMING
+  JEUX_DE_SOCIETE
+  CULTURE
+  SCOLAIRE
+  ART
+  MUSIQUE
+  CODE_WEB_TECH
+  BAR_CLUB
+  SPORT
+}
+
 model Event {
   id          String     @id @default(cuid())
   activity    String
+  type        EventType  @default(AUTRE)
+  proposable  Boolean     @default(true)
   locations   Location[] @relation("EventLocations")
   createdBy   User       @relation("AdminCreatedEvents", fields: [createdById], references: [id])
   createdById String
