@@ -1,7 +1,7 @@
 
 import { redirect } from 'next/navigation'
 import AdminDashboard from './AdminDashboard'
-import { auth } from '@/auth'
+import { auth } from '@/lib/authOptions'
 
 
 export default async function Page() {
