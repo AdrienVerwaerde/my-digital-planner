@@ -35,4 +35,4 @@ export default async function auth(req: any, res: any) {
 
 export const config = {
     matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
-};
+}
