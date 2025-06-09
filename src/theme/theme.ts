@@ -46,6 +46,7 @@ const theme = createTheme({
                     fontFamily: 'Roboto, sans-serif',
                     color: 'white',
                     fontWeight: 600,
+                    padding: '0.5rem 1rem',
                     textTransform: 'uppercase',
                     boxShadow: 'none',
                     backgroundColor: '#3C3C3B',

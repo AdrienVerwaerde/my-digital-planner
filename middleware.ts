@@ -1,11 +1,11 @@
-import { auth } from "./auth";
 import { NextResponse } from "next/server";
 
 const protectedRoutes = ["/dashboard"];
 const authPageRoutes = ["/login"];
 const apiAuthPrefix = "/api/auth";
 
-export default auth(async (req) => {
+export default async function auth(req: any, res: any) {
+
     const { nextUrl } = req;
     const authData = await req.auth;
     const isLoggedIn = !!req.auth;
@@ -30,7 +30,7 @@ export default auth(async (req) => {
     }
 
     return NextResponse.next();
-});
+};
 
 
 export const config = {

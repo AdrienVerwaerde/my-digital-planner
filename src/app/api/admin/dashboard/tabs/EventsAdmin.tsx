@@ -3,7 +3,8 @@
 import { useEffect, useState } from 'react'
 import {
   Box, Button, Table, TableHead, TableRow, TableCell,
-  TableBody, Typography, CircularProgress, IconButton, Snackbar, Alert
+  TableBody, Typography, CircularProgress, IconButton, Snackbar, Alert,
+  useMediaQuery
 } from '@mui/material'
 import { Add, Delete, Edit } from '@mui/icons-material'
 import EventForm from '../../Forms/EventForm'
@@ -25,6 +26,7 @@ export default function EventsAdmin() {
   const [editingEvent, setEditingEvent] = useState<Event | null>(null)
   const [snackbarOpen, setSnackbarOpen] = useState(false)
   const [snackbarMessage, setSnackbarMessage] = useState('')
+  const isMobile = useMediaQuery('(max-width: 640px)')
 
   const openEventDialog = () => {
     setEditingEvent(null)
@@ -105,7 +107,7 @@ export default function EventsAdmin() {
 
   return (
     <>
-      <Box sx={{ maxWidth: '100%', overflowX: 'auto' }}>
+      <Box sx={{ width: isMobile ? '100%' : '60%', overflowX: 'auto' }}>
         <IconButton title="Ajouter un événement" onClick={openEventDialog} sx={{ backgroundColor: "primary.main", ml: 1, '&:hover': { backgroundColor: "primary.light" } }}>
           <Add fontSize="medium" sx={{ color: "white" }} />
         </IconButton>

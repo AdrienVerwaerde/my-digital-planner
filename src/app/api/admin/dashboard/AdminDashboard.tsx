@@ -21,9 +21,9 @@ export default function AdminDashboard() {
                 <LogoutButton />
             </Stack>
             <Tabs value={tab} onChange={(_, newValue) => setTab(newValue)}>
-                <Tab label="Users" />
-                <Tab label="Events" />
-                <Tab label="Locations" />
+                <Tab label="Utilisateurs" />
+                <Tab label="Événements" />
+                <Tab label="Lieux" />
             </Tabs>
 
             {tab === 0 && <UsersAdmin />}

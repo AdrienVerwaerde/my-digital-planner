@@ -3,7 +3,8 @@
 import { useEffect, useState } from 'react'
 import {
   Box, Button, CircularProgress, IconButton, Snackbar, Alert,
-  Table, TableBody, TableCell, TableHead, TableRow, Typography
+  Table, TableBody, TableCell, TableHead, TableRow, Typography,
+  useMediaQuery
 } from '@mui/material'
 import { Add, Edit, Delete } from '@mui/icons-material'
 import LocationForm from '../../Forms/LocationForm'
@@ -24,6 +25,7 @@ export default function LocationsAdmin() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [snackbarOpen, setSnackbarOpen] = useState(false)
   const [snackbarMessage, setSnackbarMessage] = useState('')
+  const isMobile = useMediaQuery('(max-width: 640px)')
 
   const fetchLocations = async () => {
     setLoading(true)
@@ -103,7 +105,7 @@ export default function LocationsAdmin() {
 
   return (
     <>
-      <Box sx={{ maxWidth: '100%', overflowX: 'auto' }}>
+      <Box sx={{ width: isMobile ? '100%' : '60%', overflowX: 'auto' }}>
         <IconButton title="Ajouter un lieu" onClick={openCreateDialog} sx={{
           backgroundColor: "primary.main",
           ml: 1,
@@ -117,7 +119,6 @@ export default function LocationsAdmin() {
             <TableRow>
               <TableCell>Nom</TableCell>
               <TableCell>Adresse</TableCell>
-              <TableCell>Lien</TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -125,14 +126,9 @@ export default function LocationsAdmin() {
             {locations.map(loc => (
               <TableRow key={loc.id}>
                 <TableCell>{loc.name}</TableCell>
-                <TableCell>{loc.address}</TableCell>
+                <TableCell><a href={loc.link} target="_blank" style={{ color: '#2DB7C4' }}>{loc.address}</a></TableCell>
                 <TableCell>
-                  <a href={loc.link} target="_blank" style={{ color: '#2DB7C4' }}>
-                    Voir
-                  </a>
-                </TableCell>
-                <TableCell>
-                <Box sx={{ display: 'flex', gap: 1 }}>
+                  <Box sx={{ display: 'flex', gap: 1 }}>
                     <IconButton title="Éditer" sx={{ backgroundColor: "secondary.main", '&:hover': { backgroundColor: "primary.main" } }} onClick={() => handleEdit(loc)}>
                       <Edit fontSize='small' sx={{ color: "white" }} />
                     </IconButton>

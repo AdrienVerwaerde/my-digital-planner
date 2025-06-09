@@ -1,8 +1,9 @@
 'use client'
 
-import LoginButton from "@/components/Login/LoginButton";
+import LoginForm from "@/components/Login/LoginForm";
 import { Box, Card, Typography, useMediaQuery } from "@mui/material";
 import Image from "next/image";
+import Link from "next/link";
 
 
 function Login() {
@@ -13,14 +14,14 @@ function Login() {
             backgroundAttachment: "fixed", p: 5
         }}>
 
-            <Card elevation={4} sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "2rem", p: isMobile ? "2rem" : "4rem", borderRadius: "8px", maxWidth: isMobile ? "100%" : "500px", maxHeight: isMobile ? "100%" : "600px" }}>
+            <Card elevation={4} sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "2rem", p: isMobile ? "2rem" : "4rem", borderRadius: "8px", maxWidth: isMobile ? "100%" : "500px", maxHeight: isMobile ? "100%" : "750px" }}>
                 <Image alt={"logo"} src="/images/LOGO_MDS.png" width={200} height={200} style={{}} />
-                <Typography variant="h4" fontFamily={'Solano'} fontWeight={'bold'}>LOGIN</Typography>
+                <Typography variant="h4" fontFamily={'Solano'} fontWeight={'bold'}>CONNEXION</Typography>
                 <Typography variant="body1" fontFamily={'Roboto, sans-serif'}>
                     Bienvenue sur <span style={{ fontWeight: "bold", color: '#2DB7C4' }}>MyDigitalPlanner</span>, la plateforme conçue spécialement pour les élèves de MyDigitalSchool ! <br></br><br></br>
-                    Connecte-toi avec ton <b>email MyDigitalSchool</b> pour ne rater aucun des événements organisés par ton BDE 🎉
+                    Connecte-toi ou <Link href="/register" style={{ fontWeight: "bold", textDecoration: "underline", color: "secondary.main" }}>inscris-toi</Link> pour ne rater aucun des événements organisés par ton BDE 🎉
                 </Typography>
-                <LoginButton />
+                <LoginForm />
             </Card>
         </Box>
     );

@@ -9,8 +9,10 @@ datasource db {
 
 model User {
   id        String   @id @default(cuid())
-  name      String?
+  name      String
+  surname   String?
   email     String   @unique
+  hashedPassword String?
   role      Role     @default(STUDENT)
   createdAt DateTime @default(now())
 
