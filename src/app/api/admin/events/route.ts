@@ -1,7 +1,7 @@
 
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { auth } from "../../../../../auth";
+import { auth } from "@/lib/authOptions";
 
 export async function GET() {
     const events = await prisma.event.findMany({
@@ -42,8 +42,10 @@ export async function POST(req: Request) {
                     connect: locationIds.map((id: string) => ({ id })),
                 },
             },
+            include: {
+                locations: { select: { id: true, name: true } },
+            },
         });
-
 
         return NextResponse.json(event);
     } catch (error) {

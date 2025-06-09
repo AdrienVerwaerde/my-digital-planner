@@ -1,4 +1,4 @@
-import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, Typography, CircularProgress } from "@mui/material"
+import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, Typography, CircularProgress, Stack, useMediaQuery } from "@mui/material"
 import { useEffect, useState } from "react"
 
 type Location = {
@@ -20,6 +20,7 @@ export default function LocationForm({ open, onClose, onSubmit, location, isLoad
     const [name, setName] = useState('')
     const [address, setAddress] = useState('')
     const [link, setLink] = useState('')
+    const isMobile = useMediaQuery('(max-width: 740px)')
 
     useEffect(() => {
         if (location) {
@@ -47,7 +48,7 @@ export default function LocationForm({ open, onClose, onSubmit, location, isLoad
             <Typography variant="h6" sx={{ fontFamily: 'Consolas, monospace', p: 2 }}>
                 {location ? "Modifier le lieu" : "Créer un lieu"}
             </Typography>
-            <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 3, minWidth: 300 }}>
+            <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 3, minWidth: 300, width: isMobile ? "100%" : "450px" }}>
                 <TextField
                     label="Nom du lieu"
                     value={name}
@@ -66,16 +67,16 @@ export default function LocationForm({ open, onClose, onSubmit, location, isLoad
             </DialogContent>
             {isLoading ? (
                 <DialogActions>
-                    <Button sx={{ width: "100%" }} disabled>
-                        <CircularProgress size={24} sx={{ color: "white" }} />
-                    </Button>
+                    <Button sx={{ width: "100%" }} disabled>En cours...</Button>
                 </DialogActions>
             ) : (
                 <DialogActions>
-                    <Button sx={{ width: "100%" }} onClick={onClose}>Annuler</Button>
-                    <Button sx={{ width: "100%" }} onClick={handleSubmit}>
-                        {location ? "Mettre à jour" : "Créer"}
-                    </Button>
+                    <Stack direction={isMobile ? "column" : "row"} gap={1} sx={{alignItems: "center", width: "100%"}}>
+                        <Button sx={{ width: "100%" }} onClick={onClose}>Annuler</Button>
+                        <Button sx={{ width: "100%" }} onClick={handleSubmit}>
+                            {location ? "Mettre à jour" : "Créer"}
+                        </Button>
+                    </Stack>
                 </DialogActions>
             )}
         </Dialog>

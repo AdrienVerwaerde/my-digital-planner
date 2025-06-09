@@ -1,7 +1,8 @@
 import React from 'react'
 import AdminDashboard from './dashboard/AdminDashboard'
-import { auth } from '../../../../auth'
+
 import { NextResponse } from 'next/server'
+import { auth } from '@/lib/authOptions'
 
 const Admin = async () => {
     const session = await auth()

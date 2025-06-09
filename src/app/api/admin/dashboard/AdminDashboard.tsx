@@ -15,8 +15,8 @@ export default function AdminDashboard() {
     return (
         <Box sx={{ p: 4, width: '100%', display: 'flex', flexDirection: 'column', gap: 2, justifyContent: 'center', alignItems: 'center' }}>
             <Stack direction={"row"} gap={1} sx={{ width: '100%', justifyContent: isMobile ? 'center' : 'flex-end' }}>
-                <Button href="/">
-                    Quitter le dashboard
+                <Button variant="contained" href="/">
+                    Quitter dashboard
                 </Button>
                 <LogoutButton />
             </Stack>

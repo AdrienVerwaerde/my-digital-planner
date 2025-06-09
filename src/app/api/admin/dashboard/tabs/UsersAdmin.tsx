@@ -1,8 +1,7 @@
-
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Box, Button, Table, TableHead, TableRow, TableCell, TableBody, Typography, CircularProgress, IconButton, Stack, useMediaQuery } from '@mui/material'
+import { Box, Table, TableHead, TableRow, TableCell, TableBody, Typography, CircularProgress, IconButton, useMediaQuery } from '@mui/material'
 import { Snackbar, Alert } from '@mui/material'
 import UserForm from '../../Forms/UserForm'
 import { Add, Delete, Edit } from '@mui/icons-material'
@@ -27,6 +26,7 @@ export default function UsersAdmin() {
     const isMobile = useMediaQuery('(max-width: 640px)')
 
     const openUserDialog = () => {
+        console.log(dialogMode);
         setEditingUser(null)
         setDialogMode('create')
         setDialogOpen(true)

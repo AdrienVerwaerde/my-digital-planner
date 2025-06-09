@@ -1,5 +1,5 @@
 
-import NextAuth, { NextAuthOptions } from 'next-auth';
+import NextAuth, { getServerSession, NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
 import bcrypt from 'bcrypt';
@@ -95,5 +95,8 @@ export const authOptions: NextAuthOptions = {
     }
 };
 
+export const auth = () => getServerSession(authOptions);
+
 const handler = NextAuth(authOptions);
 export { handler as GET, handler as POST };
+

@@ -1,5 +1,5 @@
 // components/UserDialog.tsx
-import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, MenuItem, Typography, CircularProgress } from "@mui/material"
+import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, MenuItem, Typography, CircularProgress, Stack, useMediaQuery } from "@mui/material"
 import { useEffect, useState } from "react"
 
 type User = {
@@ -21,6 +21,7 @@ export default function UserForm({ open, onClose, onSubmit, user, isLoading }: P
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [role, setRole] = useState('STUDENT')
+    const isMobile = useMediaQuery('(max-width: 740px)')
 
     useEffect(() => {
         if (user) {
@@ -41,7 +42,13 @@ export default function UserForm({ open, onClose, onSubmit, user, isLoading }: P
     return (
         <Dialog open={open} onClose={onClose}>
             <Typography variant="h6" sx={{ fontFamily: 'Consolas, monospace', p: 2 }}>{user ? "Modifier l'utilisateur" : "Créer un utilisateur"}</Typography>
-            <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 3, minWidth: 300 }}>
+            <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 3, minWidth: 300, width: isMobile ? "100%" : "450px" }}>
+                <TextField
+                    label="Nom"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    sx={{}}
+                />
                 <TextField
                     label="Nom"
                     value={name}
@@ -66,14 +73,16 @@ export default function UserForm({ open, onClose, onSubmit, user, isLoading }: P
             </DialogContent>
             {isLoading ? (
                 <DialogActions>
-                    <Button sx={{ width: "100%"}} disabled><CircularProgress size={24} sx={{ color: "white" }} /></Button>
+                    <Button sx={{ width: "100%" }} disabled>En cours...</Button>
                 </DialogActions>
-                ) : (
-                <DialogActions> 
-                    <Button sx={{ width: "100%" }} onClick={onClose}>Annuler</Button>
-                    <Button sx={{ width: "100%" }} onClick={handleSubmit}>
-                        {user ? "Mettre à jour" : "Créer"}
-                    </Button>
+            ) : (
+                <DialogActions>
+                    <Stack direction={isMobile ? "column" : "row"} gap={1} sx={{ alignItems: "center", width: "100%" }}>
+                        <Button sx={{ width: "100%" }} onClick={onClose}>Annuler</Button>
+                        <Button sx={{ width: "100%" }} onClick={handleSubmit}>
+                            {user ? "Mettre à jour" : "Créer"}
+                        </Button>
+                    </Stack>
                 </DialogActions>
             )}
         </Dialog>

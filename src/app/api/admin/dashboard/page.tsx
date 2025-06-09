@@ -1,7 +1,7 @@
-// src/app/admin/dashboard/page.tsx
-import { auth } from '../../../../../auth'
+
 import { redirect } from 'next/navigation'
 import AdminDashboard from './AdminDashboard'
+import { auth } from '@/lib/authOptions'
 
 
 export default async function Page() {

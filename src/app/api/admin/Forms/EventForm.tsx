@@ -16,6 +16,8 @@ import {
     CircularProgress,
     FormControlLabel,
     Checkbox,
+    useMediaQuery,
+    Stack,
 } from "@mui/material"
 import { useEffect, useState } from "react"
 
@@ -41,6 +43,7 @@ export default function EventForm({ open, onClose, onSubmit, event }: Props) {
     const [isLoading, setIsLoading] = useState(false)
     const [type, setType] = useState('');
     const [proposable, setProposable] = useState(true)
+    const isMobile = useMediaQuery('(max-width: 740px)')
 
     useEffect(() => {
         fetch('/api/locations')
@@ -79,7 +82,7 @@ export default function EventForm({ open, onClose, onSubmit, event }: Props) {
             <Typography variant="h6" sx={{ fontFamily: 'Consolas, monospace', p: 2 }}>
                 {event ? "Modifier l'événement" : "Créer un événement"}
             </Typography>
-            <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, minWidth: 300 }}>
+            <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, minWidth: 300, width: isMobile ? "100%" : "450px" }}>
                 <TextField
                     label="Activité"
                     value={activity}
@@ -141,14 +144,16 @@ export default function EventForm({ open, onClose, onSubmit, event }: Props) {
             </DialogContent>
             {isLoading ? (
                 <DialogActions>
-                    <Button sx={{ width: "100%" }} disabled><CircularProgress size={24} sx={{ color: "white" }} /></Button>
+                    <Button sx={{ width: "100%" }} disabled>En cours...</Button>
                 </DialogActions>
             ) : (
                 <DialogActions>
-                    <Button sx={{ width: "100%" }} onClick={onClose}>Annuler</Button>
-                    <Button sx={{ width: "100%" }} onClick={handleSubmit}>
-                        {event ? "Mettre à jour" : "Créer"}
-                    </Button>
+                    <Stack direction={isMobile ? "column" : "row"} gap={1} sx={{alignItems: "center", width: "100%"}}>
+                        <Button sx={{ width: "100%" }} onClick={onClose}>Annuler</Button>
+                        <Button sx={{ width: "100%" }} onClick={handleSubmit}>
+                            {event ? "Mettre à jour" : "Créer"}
+                        </Button>
+                    </Stack>
                 </DialogActions>
             )}
         </Dialog>
