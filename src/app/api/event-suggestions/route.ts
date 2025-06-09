@@ -31,3 +31,16 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: 'Failed to save suggestion' }, { status: 500 })
     }
 }
+
+export async function GET() {
+    const session = await auth()
+    if (!session?.user || session.user.role !== 'ADMIN') {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const suggestions = await prisma.eventSuggestion.findMany({
+        orderBy: { name: 'asc' }
+    })
+
+    return NextResponse.json(suggestions)
+}
