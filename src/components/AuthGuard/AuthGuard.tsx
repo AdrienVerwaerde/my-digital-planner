@@ -13,7 +13,7 @@ export const AuthGuard = ({ children }: { children: ReactNode }) => {
         if (status === 'unauthenticated') {
             router.push('/login')
         }
-    }, [status])
+    }, [status, router])
 
     if (status === 'loading') return <Loader />
     if (!session) return null

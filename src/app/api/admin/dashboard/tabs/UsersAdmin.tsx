@@ -80,8 +80,9 @@ export default function UsersAdmin() {
                 const data = await res.json()
                 setUsers(data)
 
-            } catch (err: any) {
-                setError(err.message)
+            } catch (err) {
+                const errorMessage = err instanceof Error ? err.message : 'Une erreur inconnue est survenue'
+                setError(errorMessage)
             } finally {
                 setIsLoading(false)
             }
@@ -113,16 +114,16 @@ export default function UsersAdmin() {
 
     return (
         <>
-            <Box sx={{ width: isMobile ? '100%' : '60%',  overflowX: 'auto' }}>
+            <Box sx={{ width: isMobile ? '100%' : '60%', overflowX: 'auto' }}>
                 <IconButton title="Ajouter un utilisateur" onClick={openUserDialog} sx={{ backgroundColor: "primary.main", ml: 1, '&:hover': { backgroundColor: "primary.light" } }}><Add fontSize='medium' sx={{ color: "white" }} />
                 </IconButton>
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableCell>Nom</TableCell>
-                            <TableCell>Email</TableCell>
-                            <TableCell>Rôle</TableCell>
-                            <TableCell>Actions</TableCell>
+                            <TableCell sx={{ fontWeight: "bold" }}>Nom</TableCell>
+                            <TableCell sx={{ fontWeight: "bold" }}>Email</TableCell>
+                            <TableCell sx={{ fontWeight: "bold" }}>Rôle</TableCell>
+                            <TableCell sx={{ fontWeight: "bold" }}>Actions</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -132,19 +133,19 @@ export default function UsersAdmin() {
                                 <TableCell>{user.email}</TableCell>
                                 <TableCell>{user.role}</TableCell>
                                 <TableCell>
-                                <Box sx={{ display: 'flex', gap: 1 }}>
-                                    <IconButton
-                                        title="Éditer"
-                                        sx={{ backgroundColor: "secondary.main", '&:hover': { backgroundColor: "primary.main" } }}
-                                        onClick={() => handleEdit(user)}>
-                                        <Edit fontSize='small' sx={{ color: "white" }} />
-                                    </IconButton>
-                                    <IconButton
-                                        title="Supprimer"
-                                        sx={{ backgroundColor: "error.main", '&:hover': { backgroundColor: "error.dark" } }}
-                                        onClick={() => handleDelete(user.id)}>
-                                        <Delete fontSize='small' sx={{ color: "white" }} />
-                                    </IconButton>
+                                    <Box sx={{ display: 'flex', gap: 1 }}>
+                                        <IconButton
+                                            title="Éditer"
+                                            sx={{ backgroundColor: "secondary.main", '&:hover': { backgroundColor: "primary.main" } }}
+                                            onClick={() => handleEdit(user)}>
+                                            <Edit fontSize='small' sx={{ color: "white" }} />
+                                        </IconButton>
+                                        <IconButton
+                                            title="Supprimer"
+                                            sx={{ backgroundColor: "error.main", '&:hover': { backgroundColor: "error.dark" } }}
+                                            onClick={() => handleDelete(user.id)}>
+                                            <Delete fontSize='small' sx={{ color: "white" }} />
+                                        </IconButton>
                                     </Box>
                                 </TableCell>
                             </TableRow>

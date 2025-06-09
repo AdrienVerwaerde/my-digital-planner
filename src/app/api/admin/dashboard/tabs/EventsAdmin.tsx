@@ -89,8 +89,9 @@ export default function EventsAdmin() {
         const res = await fetch('/api/admin/events')
         const data = await res.json()
         setEvents(data)
-      } catch (err: any) {
-        setError(err.message)
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : 'Une erreur inconnue est survenue'
+        setError(errorMessage)
       } finally {
         setIsLoading(false)
       }
@@ -114,9 +115,9 @@ export default function EventsAdmin() {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Activité</TableCell>
-              <TableCell>Lieu(x)</TableCell>
-              <TableCell>Actions</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Activité</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Lieu(x)</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

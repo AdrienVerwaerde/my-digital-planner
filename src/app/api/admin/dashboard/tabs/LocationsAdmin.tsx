@@ -33,8 +33,9 @@ export default function LocationsAdmin() {
       const res = await fetch('/api/admin/locations')
       const data = await res.json()
       setLocations(data)
-    } catch (err: any) {
-      setError(err.message)
+    } catch (err) {
+  const errorMessage = err instanceof Error ? err.message : 'Une erreur inconnue est survenue'
+  setError(errorMessage)
     } finally {
       setLoading(false)
     }
@@ -117,9 +118,9 @@ export default function LocationsAdmin() {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Nom</TableCell>
-              <TableCell>Adresse</TableCell>
-              <TableCell>Actions</TableCell>
+              <TableCell sx={{fontWeight:"bold"}}>Nom</TableCell>
+              <TableCell sx={{fontWeight:"bold"}}>Adresse</TableCell>
+              <TableCell sx={{fontWeight:"bold"}}>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

@@ -53,13 +53,29 @@ export const authOptions: NextAuthOptions = {
     },
     callbacks: {
         async jwt({ token, user }) {
+            // First login
             if (user) {
                 token.id = user.id;
                 token.role = user.role;
                 token.name = user.name;
                 token.surname = user.surname;
                 token.email = user.email;
+            } else if (!token.surname) {
+                // On subsequent logins, fetch user from DB
+                const dbUser = await prisma.user.findUnique({
+                    where: { email: token.email as string },
+                    select: { id: true, role: true, name: true, surname: true, email: true }
+                });
+
+                if (dbUser) {
+                    token.id = dbUser.id;
+                    token.role = dbUser.role;
+                    token.name = dbUser.name;
+                    token.surname = dbUser.surname;
+                    token.email = dbUser.email;
+                }
             }
+
             return token;
         },
         async session({ session, token }) {
@@ -80,12 +96,12 @@ export const authOptions: NextAuthOptions = {
             })
             // If not, create a new user
             if (!existingUser) {
-                const [name, surname] = (user.name || profile?.name || "Utilisateur").split(" ");
+                const [first, last] = (user.name || profile?.name || "Utilisateur").split(" ");
                 await prisma.user.create({
                     data: {
                         email: user.email!,
-                        name: name || "Utilisateur",
-                        surname: surname || "",
+                        name: last || "Nom",
+                        surname: first || "Prénom",
                         role: "STUDENT",
                     },
                 });

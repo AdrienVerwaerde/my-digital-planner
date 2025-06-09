@@ -82,7 +82,7 @@ export const CustomCalendar = () => {
         }))
 
         return [...baseDays, ...extraDays]
-    }, [currentMonth, isMobile, isSmallScreen])
+    }, [currentMonth, isMobile, isSmallScreen, today])
 
     const eventsByDate = useMemo(() => {
         if (!Array.isArray(events)) return {}

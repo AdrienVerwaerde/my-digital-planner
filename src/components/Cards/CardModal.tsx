@@ -1,5 +1,5 @@
 
-import { Box, Button, Card, CardContent, CircularProgress, IconButton, List, ListItem, Modal, Typography, useMediaQuery } from '@mui/material'
+import { Box, Button, Card, CardContent, IconButton, List, ListItem, Modal, Typography, useMediaQuery } from '@mui/material'
 import { useEffect, useState } from 'react';
 import { EventAccordion } from '../Events/EventAccordion';
 import { useFormattedDate } from '@/app/hooks/useFormattedDate';
@@ -54,7 +54,7 @@ const mobileModalStyle = {
 const CardModal = ({ isModalOpen, handleCloseModal, date, events, refreshEvents }: CardModalProps) => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const isMobile = useMediaQuery('(max-width: 640px)')
-    const [isAvailable, setIsAvailable] = useState<boolean>(false)
+    const [isAvailable] = useState<boolean>(false)
     const [currentUser, setCurrentUser] = useState<{ id: string; role: string } | null>(null)
 
     useEffect(() => {
@@ -188,7 +188,7 @@ const CardModal = ({ isModalOpen, handleCloseModal, date, events, refreshEvents 
                         sx={{ mt: 'auto' }}
                         onClick={handleSubmit}
                         disabled={isLoading}>
-                        {isLoading ? <CircularProgress size={24} sx={{ color: "white" }} /> : "Valider"}
+                        {isLoading ? "En cours..." : "Valider"}
                     </Button>
                 </CardContent>
             </Card>

@@ -1,5 +1,5 @@
 // components/UserDialog.tsx
-import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, MenuItem, Typography, CircularProgress, Stack, useMediaQuery } from "@mui/material"
+import { Dialog, DialogContent, DialogActions, TextField, Button, MenuItem, Typography, Stack, useMediaQuery } from "@mui/material"
 import { useEffect, useState } from "react"
 
 type User = {

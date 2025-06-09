@@ -10,7 +10,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
 
 import AddIcon from '@mui/icons-material/Add';
-import { Box, CircularProgress, FormControl, IconButton, InputLabel, MenuItem, Select, SelectChangeEvent, Stack, Typography } from '@mui/material';
+import { Box, CircularProgress, FormControl, IconButton, InputLabel, MenuItem, Select, SelectChangeEvent, Stack, TextField, Typography, Snackbar, Alert } from '@mui/material';
 import { LocalizationProvider, TimePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
@@ -154,6 +154,107 @@ function EventCreateDialog({ open, onClose, selectedValue, selectedDate, refresh
     )
 }
 
+function EventSuggestionDialog({ open, onClose }: { open: boolean, onClose: () => void }) {
+    const [name, setName] = React.useState('')
+    const [location, setLocation] = React.useState('')
+    const [hour, setHour] = React.useState<dayjs.Dayjs | null>(null)
+    const [message, setMessage] = React.useState('')
+    const [error, setError] = React.useState('')
+    const [isLoading, setIsLoading] = React.useState(false)
+    const [snackbarOpen, setSnackbarOpen] = React.useState(false)
+    const [snackbarMessage, setSnackbarMessage] = React.useState('')
+    const [snackbarSeverity, setSnackbarSeverity] = React.useState<'success' | 'error'>('success')
+
+    const handleSubmit = async () => {
+        if (!name || !location || !hour) {
+            setError("Tous les champs requis doivent être remplis.")
+            return
+        }
+
+        setError('')
+        setIsLoading(true)
+
+        try {
+            const res = await fetch('/api/event-suggestions', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name,
+                    location,
+                    hour: hour.toISOString(),
+                    message,
+                }),
+            })
+
+            if (!res.ok) throw new Error()
+            setSnackbarSeverity('success')
+            setSnackbarMessage('Suggestion envoyée avec succès !')
+            setSnackbarOpen(true)
+            onClose()
+        } catch {
+            setSnackbarSeverity('error')
+            setSnackbarMessage('Erreur lors de l’envoi.')
+            setSnackbarOpen(true)
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
+    React.useEffect(() => {
+        if (open) {
+            setName('')
+            setLocation('')
+            setHour(null)
+            setMessage('')
+            setError('')
+        }
+    }, [open])
+
+    return (
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <Dialog open={open} onClose={onClose}>
+                <DialogTitle>Proposer une nouvelle activité</DialogTitle>
+                <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', gap: 2, minWidth: 300 }}>
+                    <TextField label="Nom de l'activité" value={name} onChange={e => setName(e.target.value)} />
+                    <TextField label="Lieu" value={location} onChange={e => setLocation(e.target.value)} />
+                    <TimePicker
+                        ampm={false}
+                        label="Heure"
+                        value={hour}
+                        onChange={setHour}
+                        slotProps={{ textField: { fullWidth: true } }}
+                    />
+                    <TextField
+                        label="Message (optionnel)"
+                        multiline
+                        rows={3}
+                        value={message}
+                        onChange={e => setMessage(e.target.value)}
+                    />
+                    {error && <Typography color="error">{error}</Typography>}
+                    <Button onClick={handleSubmit} disabled={isLoading}>
+                        {isLoading ? 'Envoi...' : 'Envoyer'}
+                    </Button>
+                </Box>
+                <Snackbar
+                    open={snackbarOpen}
+                    autoHideDuration={4000}
+                    onClose={() => setSnackbarOpen(false)}
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+                >
+                    <Alert
+                        onClose={() => setSnackbarOpen(false)}
+                        severity={snackbarSeverity}
+                        sx={{ width: '100%' }}
+                    >
+                        {snackbarMessage}
+                    </Alert>
+                </Snackbar>
+            </Dialog>
+        </LocalizationProvider>
+    )
+}
+
 function CardDialog({ open, onClose, eventTypes, selectedValue }: CardDialogProps) {
     const handleClose = () => {
         onClose(selectedValue);
@@ -164,7 +265,7 @@ function CardDialog({ open, onClose, eventTypes, selectedValue }: CardDialogProp
     };
 
     return (
-        <Dialog onClose={() => onClose('')} open={open}>
+        <Dialog onClose={handleClose} open={open}>
             <DialogTitle sx={{ fontFamily: 'Consolas, monospace' }}>Sélectionner une activité</DialogTitle>
             <List sx={{ pt: 0, display: "flex", flexDirection: "column", alignItems: "center" }}>
                 {eventTypes.map(({ activity, type }) => {
@@ -204,9 +305,10 @@ type CardDialogDemoProps = {
 
 export default function CardDialogDemo({ date, refreshEvents }: CardDialogDemoProps) {
     const [open, setOpen] = React.useState(false);
-    const [selectedValue, setSelectedValue] = React.useState('');
+    const [selectedValue] = React.useState('');
     const [eventTypes, setEventTypes] = React.useState<{ activity: string, type: string }[]>([]);
     const [isCreateDialogOpen, setIsCreateDialogOpen] = React.useState(false)
+    const [isSuggestionOpen, setIsSuggestionOpen] = React.useState(false)
     const [proposedType, setProposedType] = React.useState<string | null>(null)
     const [locations, setLocations] = React.useState<{ id: string, address: string, name: string }[]>([])
 
@@ -221,16 +323,18 @@ export default function CardDialogDemo({ date, refreshEvents }: CardDialogDemoPr
     const handleClose = async (value: string) => {
         setOpen(false)
 
-        if (value) {
+        if (value === 'Autre') {
+            setIsSuggestionOpen(true)
+        } else if (value) {
             setProposedType(value)
             setIsCreateDialogOpen(true)
 
-            // Fetch the locations linked to the event
             const res = await fetch(`/api/event-types/${value}`)
             const data = await res.json()
             setLocations(data.locations)
         }
     };
+
     return (
         <Box>
             <Stack direction="row" alignItems="center" gap={1} sx={{ my: 2 }}>
@@ -254,6 +358,10 @@ export default function CardDialogDemo({ date, refreshEvents }: CardDialogDemoPr
                 selectedDate={date}
                 refreshEvents={refreshEvents}
                 locations={locations}
+            />
+            <EventSuggestionDialog
+                open={isSuggestionOpen}
+                onClose={() => setIsSuggestionOpen(false)}
             />
         </Box>
     );

@@ -1,0 +1,10 @@
+{
+  "name": "your-project",
+  "version": "1.0.0",
+  "eslintConfig": {
+    "extends": ["next/core-web-vitals"],
+    "rules": {
+      "react/no-unescaped-entities": "off"
+    }
+  }
+}
