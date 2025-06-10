@@ -77,7 +77,7 @@ function LoginForm() {
                 sx={{ p: 1 }}
             >
                 {isLoadingGoogle ? (
-                    <CircularProgress size={24} sx={{ color: "white" }} />
+                    <CircularProgress size={24} />
                 ) : (
                     <Stack direction="row" gap={1} alignItems="center">
                         <GoogleIcon /> Connexion avec Google

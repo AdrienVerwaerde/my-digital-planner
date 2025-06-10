@@ -1,5 +1,5 @@
 
-import { Box, Button, Card, CardContent, IconButton, List, ListItem, Modal, Typography, useMediaQuery } from '@mui/material'
+import { Box, Button, Card, CardContent, CircularProgress, IconButton, List, ListItem, Modal, Typography, useMediaQuery } from '@mui/material'
 import { useEffect, useState } from 'react';
 import { EventAccordion } from '../Events/EventAccordion';
 import { useFormattedDate } from '@/app/hooks/useFormattedDate';
@@ -188,7 +188,7 @@ const CardModal = ({ isModalOpen, handleCloseModal, date, events, refreshEvents 
                         sx={{ mt: 'auto' }}
                         onClick={handleSubmit}
                         disabled={isLoading}>
-                        {isLoading ? "En cours..." : "Valider"}
+                        {isLoading ? <CircularProgress size={24} /> : "Valider"}
                     </Button>
                 </CardContent>
             </Card>

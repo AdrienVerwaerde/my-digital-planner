@@ -42,17 +42,22 @@ export async function GET() {
             date: 'asc',
         },
     })
-    
+
     const mappedUserEvents = userEvents.map(event => ({
         ...event,
         name: event.activity,
         locations: [event.location],
-        time: new Date(event.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        time: new Date(event.date).toLocaleTimeString('en-GB', {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false,
+            timeZone: 'Europe/Paris',
+        }),
         date: event.date.toISOString().split('T')[0],
         availableCount: event.participants.length,
-        isUserParticipating: event.participants.some(p => p.id === event.createdBy.id),
+        isUserParticipating: event.participants.some(p => p.id === user.id)
     }))
-    
+
     return NextResponse.json(mappedUserEvents)
 }
 
