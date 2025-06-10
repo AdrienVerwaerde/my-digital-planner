@@ -9,6 +9,7 @@ import { Add, Delete, Edit } from '@mui/icons-material'
 type User = {
     id: string
     name: string
+    surname?: string
     email: string
     role: string
 }
@@ -121,6 +122,7 @@ export default function UsersAdmin() {
                     <TableHead>
                         <TableRow>
                             <TableCell sx={{ fontWeight: "bold" }}>Nom</TableCell>
+                            <TableCell sx={{ fontWeight: "bold" }}>Prénom</TableCell>
                             <TableCell sx={{ fontWeight: "bold" }}>Email</TableCell>
                             <TableCell sx={{ fontWeight: "bold" }}>Rôle</TableCell>
                             <TableCell sx={{ fontWeight: "bold" }}>Actions</TableCell>
@@ -130,6 +132,7 @@ export default function UsersAdmin() {
                         {users.map(user => (
                             <TableRow key={user.id}>
                                 <TableCell>{user.name}</TableCell>
+                                <TableCell>{user.surname}</TableCell>
                                 <TableCell>{user.email}</TableCell>
                                 <TableCell>{user.role}</TableCell>
                                 <TableCell>
