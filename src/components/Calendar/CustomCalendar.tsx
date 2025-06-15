@@ -11,6 +11,7 @@ import { useState, useMemo, useEffect } from 'react'
 import DayCard from '../Cards/DayCard'
 import CalendarHeader from './CalendarHeader'
 import { Header } from '../Header/Header'
+import BackToTopButton from '../BackToTopButton/BackToTopButton'
 
 dayjs.extend(localeData)
 dayjs.locale('fr')
@@ -143,6 +144,8 @@ export const CustomCalendar = () => {
                         />
                     )
                 })}
+
+                <BackToTopButton />
             </Box>
         </>
     )
