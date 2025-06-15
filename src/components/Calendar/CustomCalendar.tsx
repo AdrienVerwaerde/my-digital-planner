@@ -11,6 +11,7 @@ import { useState, useMemo, useEffect } from 'react'
 import DayCard from '../Cards/DayCard'
 import CalendarHeader from './CalendarHeader'
 import { Header } from '../Header/Header'
+import BackToTopButton from '../BackToTopButton/BackToTopButton'
 
 dayjs.extend(localeData)
 dayjs.locale('fr')
@@ -70,7 +71,7 @@ export const CustomCalendar = () => {
         })
 
 
-        const columns = isMobile ? 2 : isSmallScreen ? 3 : 4
+        const columns = isMobile ? 1 : isSmallScreen ? 3 : 4
         const missing = columns - (baseDays.length % columns || columns)
 
         const nextMonthStart = currentMonth.add(1, 'month').startOf('month')
@@ -116,7 +117,7 @@ export const CustomCalendar = () => {
                 sx={{
                     display: 'grid',
                     gridTemplateColumns: isMobile
-                        ? 'repeat(2, 1fr)'
+                        ? 'repeat(1, 1fr)'
                         : isSmallScreen
                             ? 'repeat(3, 1fr)'
                             : 'repeat(4, 1fr)',
@@ -143,6 +144,8 @@ export const CustomCalendar = () => {
                         />
                     )
                 })}
+
+                <BackToTopButton />
             </Box>
         </>
     )

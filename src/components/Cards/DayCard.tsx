@@ -29,8 +29,8 @@ const DayCard = ({ date, dimmed, isPast, today, events = [], refreshEvents }: Da
     const isMobile = useMediaQuery('(max-width: 640px)')
 
     const cardStyle = {
-        width: isMobile ? 170 : 200,
-        height: 170,
+        width: isMobile ? 340 : 200,
+        height: isMobile ? 95 : 170,
         borderRadius: 2,
         m: "2px",
         cursor: isPast ? 'default' : 'pointer',
@@ -57,7 +57,7 @@ const DayCard = ({ date, dimmed, isPast, today, events = [], refreshEvents }: Da
                 <CardContent
                     sx={{
                         display: 'flex',
-                        flexDirection: 'column',
+                        flexDirection: isMobile ? 'row' : 'column',
                         justifyContent: 'space-between',
                         color: "secondary.main",
                         height: "100%",
@@ -74,6 +74,7 @@ const DayCard = ({ date, dimmed, isPast, today, events = [], refreshEvents }: Da
                                 variant="body2"
                                 sx={{
                                     backgroundColor: events.some(e => e.isUserParticipating) ? 'primary.main' : 'primary.light',
+                                    width: isMobile ? '170px' : '100%',
                                     color: events.some(e => e.isUserParticipating) ? 'white' : 'secondary.main',
                                     borderRadius: 2,
                                     p: 1,
