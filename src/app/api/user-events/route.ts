@@ -42,7 +42,7 @@ export async function GET() {
             date: 'asc',
         },
     })
-    
+
     const mappedUserEvents = userEvents.map(event => ({
         ...event,
         name: event.activity,
@@ -52,7 +52,7 @@ export async function GET() {
         availableCount: event.participants.length,
         isUserParticipating: event.participants.some(p => p.id === event.createdBy.id),
     }))
-    
+
     return NextResponse.json(mappedUserEvents)
 }
 
@@ -104,3 +104,34 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: "Event creation failed" }, { status: 500 })
     }
 }
+
+/**
+ * @swagger
+ * /api/user-events:
+ *   get:
+ *     summary: Get all user events
+ *     responses:
+ *       200:
+ *         description: List of user events
+ *   post:
+ *     summary: Create a new user event
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               activity:
+ *                 type: string
+ *               date:
+ *                 type: string
+ *                 format: date-time
+ *               locationId:
+ *                 type: string
+ *               eventTypeId:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Event created successfully
+ */
