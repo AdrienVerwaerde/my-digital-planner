@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-const protectedRoutes = ["/dashboard"];
+const protectedRoutes = ["/dashboard", "/docs", "/admin"];
 const authPageRoutes = ["/login"];
 const apiAuthPrefix = "/api/auth";
 

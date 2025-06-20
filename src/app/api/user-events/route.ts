@@ -1,3 +1,4 @@
+
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { auth } from '@/lib/authOptions'
@@ -42,8 +43,9 @@ export async function GET() {
             date: 'asc',
         },
     })
+    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+    const mappedUserEvents = userEvents.map((event: any) => ({
 
-    const mappedUserEvents = userEvents.map(event => ({
         ...event,
         name: event.activity,
         locations: [event.location],
@@ -55,7 +57,8 @@ export async function GET() {
         }),
         date: event.date.toISOString().split('T')[0],
         availableCount: event.participants.length,
-        isUserParticipating: event.participants.some(p => p.id === user.id)
+        // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+        isUserParticipating: event.participants.some((p: any) => p.id === event.createdBy.id),
     }))
 
     return NextResponse.json(mappedUserEvents)
@@ -109,3 +112,34 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: "Event creation failed" }, { status: 500 })
     }
 }
+
+/**
+ * @swagger
+ * /api/user-events:
+ *   get:
+ *     summary: Get all user events
+ *     responses:
+ *       200:
+ *         description: List of user events
+ *   post:
+ *     summary: Create a new user event
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               activity:
+ *                 type: string
+ *               date:
+ *                 type: string
+ *                 format: date-time
+ *               locationId:
+ *                 type: string
+ *               eventTypeId:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Event created successfully
+ */

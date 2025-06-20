@@ -1,0 +1,60 @@
+services:
+  app:
+    build: .
+    container_name: planner-app
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env.prod
+    depends_on:
+      - db
+      - redis
+    networks:
+      - planner-net
+
+  db:
+    image: postgres:16
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: mydigitalplanner
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - planner-net
+
+  redis:
+    image: redis:7
+    container_name: redis
+    restart: always
+    networks:
+      - planner-net
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - planner-net
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - "3001:3000"
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning
+    networks:
+      - planner-net
+
+volumes:
+  pgdata:
+
+networks:
+  planner-net:
+    driver: bridge
