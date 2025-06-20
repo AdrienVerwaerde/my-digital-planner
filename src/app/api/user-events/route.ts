@@ -1,3 +1,4 @@
+
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { auth } from '@/lib/authOptions'
@@ -42,15 +43,17 @@ export async function GET() {
             date: 'asc',
         },
     })
+    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+    const mappedUserEvents = userEvents.map((event: any) => ({
 
-    const mappedUserEvents = userEvents.map(event => ({
         ...event,
         name: event.activity,
         locations: [event.location],
         time: new Date(event.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         date: event.date.toISOString().split('T')[0],
         availableCount: event.participants.length,
-        isUserParticipating: event.participants.some(p => p.id === event.createdBy.id),
+        // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+        isUserParticipating: event.participants.some((p: any) => p.id === event.createdBy.id),
     }))
 
     return NextResponse.json(mappedUserEvents)
