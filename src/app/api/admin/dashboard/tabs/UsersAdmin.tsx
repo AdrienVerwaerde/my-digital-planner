@@ -9,7 +9,7 @@ import { Add, Delete, Edit } from '@mui/icons-material'
 type User = {
     id: string
     name: string
-    surname: string
+    surname?: string
     email: string
     role: string
 }

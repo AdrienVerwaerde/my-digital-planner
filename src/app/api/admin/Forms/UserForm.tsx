@@ -5,7 +5,7 @@ import { useEffect, useState } from "react"
 type User = {
     id: string
     name: string
-    surname: string
+    surname?: string
     email: string
     role: string
 }
