@@ -5,6 +5,7 @@ import { useEffect, useState } from "react"
 type User = {
     id: string
     name: string
+    surname: string
     email: string
     role: string
 }
@@ -19,6 +20,7 @@ type Props = {
 
 export default function UserForm({ open, onClose, onSubmit, user, isLoading }: Props) {
     const [name, setName] = useState('')
+    const [surname, setSurname] = useState('')
     const [email, setEmail] = useState('')
     const [role, setRole] = useState('STUDENT')
     const isMobile = useMediaQuery('(max-width: 740px)')
@@ -36,7 +38,7 @@ export default function UserForm({ open, onClose, onSubmit, user, isLoading }: P
     }, [user, open])
 
     const handleSubmit = () => {
-        onSubmit({ name, email, role })
+        onSubmit({ name, surname, email, role })
     }
 
     return (
@@ -50,9 +52,9 @@ export default function UserForm({ open, onClose, onSubmit, user, isLoading }: P
                     sx={{}}
                 />
                 <TextField
-                    label="Nom"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    label="Prénom"
+                    value={surname}
+                    onChange={(e) => setSurname(e.target.value)}
                     sx={{}}
                 />
                 <TextField
