@@ -81,7 +81,7 @@ export default function RegisterForm() {
                 startIcon={<GoogleIcon />}
             >
                 {loading ? (
-                    <CircularProgress size={24} sx={{ color: "white" }} />
+                    <CircularProgress size={24} />
                 ) : (
                     "S'inscrire avec Google"
                 )}

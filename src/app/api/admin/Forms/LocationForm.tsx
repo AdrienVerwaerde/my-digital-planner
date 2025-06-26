@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogActions, TextField, Button, Typography, Stack, useMediaQuery } from "@mui/material"
+import { Dialog, DialogContent, DialogActions, TextField, Button, Typography, Stack, useMediaQuery, CircularProgress } from "@mui/material"
 import { useEffect, useState } from "react"
 
 type Location = {
@@ -67,7 +67,7 @@ export default function LocationForm({ open, onClose, onSubmit, location, isLoad
             </DialogContent>
             {isLoading ? (
                 <DialogActions>
-                    <Button sx={{ width: "100%" }} disabled>En cours...</Button>
+                    <Button sx={{ width: "100%" }} disabled><CircularProgress size={24}  /></Button>
                 </DialogActions>
             ) : (
                 <DialogActions>

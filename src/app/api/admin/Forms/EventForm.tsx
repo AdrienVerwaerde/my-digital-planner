@@ -17,6 +17,7 @@ import {
     Checkbox,
     useMediaQuery,
     Stack,
+    CircularProgress,
 } from "@mui/material"
 import { useEffect, useState } from "react"
 
@@ -143,7 +144,7 @@ export default function EventForm({ open, onClose, onSubmit, event }: Props) {
             </DialogContent>
             {isLoading ? (
                 <DialogActions>
-                    <Button sx={{ width: "100%" }} disabled>En cours...</Button>
+                    <Button sx={{ width: "100%" }} disabled><CircularProgress size={24} /></Button>
                 </DialogActions>
             ) : (
                 <DialogActions>

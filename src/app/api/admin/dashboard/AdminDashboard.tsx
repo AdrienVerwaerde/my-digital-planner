@@ -6,6 +6,7 @@ import UsersAdmin from './tabs/UsersAdmin'
 import EventsAdmin from './tabs/EventsAdmin'
 import LocationsAdmin from './tabs/LocationsAdmin'
 import LogoutButton from '@/components/Login/LogoutButton'
+import SuggestionsAdmin from './tabs/SuggestionsAdmin'
 
 
 export default function AdminDashboard() {
@@ -24,11 +25,13 @@ export default function AdminDashboard() {
                 <Tab label="Utilisateurs" />
                 <Tab label="Événements" />
                 <Tab label="Lieux" />
+                <Tab label="Suggestions" />
             </Tabs>
 
             {tab === 0 && <UsersAdmin />}
             {tab === 1 && <EventsAdmin />}
             {tab === 2 && <LocationsAdmin />}
+            {tab === 3 && <SuggestionsAdmin />}
         </Box>
     )
 }

@@ -1,5 +1,5 @@
 // components/UserDialog.tsx
-import { Dialog, DialogContent, DialogActions, TextField, Button, MenuItem, Typography, Stack, useMediaQuery } from "@mui/material"
+import { Dialog, DialogContent, DialogActions, TextField, Button, MenuItem, Typography, Stack, useMediaQuery, CircularProgress } from "@mui/material"
 import { useEffect, useState } from "react"
 
 type User = {
@@ -75,7 +75,7 @@ export default function UserForm({ open, onClose, onSubmit, user, isLoading }: P
             </DialogContent>
             {isLoading ? (
                 <DialogActions>
-                    <Button sx={{ width: "100%" }} disabled>En cours...</Button>
+                    <Button sx={{ width: "100%" }} disabled><CircularProgress size={24} /></Button>
                 </DialogActions>
             ) : (
                 <DialogActions>

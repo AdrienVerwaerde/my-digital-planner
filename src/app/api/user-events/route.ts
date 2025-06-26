@@ -49,7 +49,12 @@ export async function GET() {
         ...event,
         name: event.activity,
         locations: [event.location],
-        time: new Date(event.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        time: new Date(event.date).toLocaleTimeString('en-GB', {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false,
+            timeZone: 'Europe/Paris',
+        }),
         date: event.date.toISOString().split('T')[0],
         availableCount: event.participants.length,
         // eslint-disable-next-line  @typescript-eslint/no-explicit-any

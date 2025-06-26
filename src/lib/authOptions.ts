@@ -100,7 +100,7 @@ export const authOptions: NextAuthOptions = {
                 await prisma.user.create({
                     data: {
                         email: user.email!,
-                        name: last || "Nom",
+                        name: last || "",
                         surname: first || "Prénom",
                         role: "STUDENT",
                     },
