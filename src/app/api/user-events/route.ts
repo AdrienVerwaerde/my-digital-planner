@@ -55,7 +55,7 @@ export async function GET() {
             hour12: false,
             timeZone: 'Europe/Paris',
         }),
-        date: event.date.toISOString().split('T')[0],
+        date: new Date(event.date).toLocaleDateString('en-CA', { timeZone: 'Europe/Paris' }),
         availableCount: event.participants.length,
         // eslint-disable-next-line  @typescript-eslint/no-explicit-any
         isUserParticipating: event.participants.some((p: any) => p.id === event.createdBy.id),

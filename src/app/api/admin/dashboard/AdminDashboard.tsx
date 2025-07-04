@@ -9,6 +9,7 @@ import LogoutButton from '@/components/Login/LogoutButton'
 import SuggestionsAdmin from './tabs/SuggestionsAdmin'
 
 
+
 export default function AdminDashboard() {
     const [tab, setTab] = useState(0)
     const isMobile = useMediaQuery('(max-width: 640px)')
