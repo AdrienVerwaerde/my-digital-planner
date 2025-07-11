@@ -1,36 +1,147 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🎉 Event Planning App
 
-## Getting Started
+This project is a full-stack event management application built with **Next.js (App Router)**, **NextAuth** for authentication, **Prisma** for database access, and **PostgreSQL** for data persistence. It allows users to view and participate in events, and lets admins manage events and review user-submitted suggestions.
 
-First, run the development server:
+---
+
+## 📦 Tech Stack
+
+- **Frontend:** React (Next.js App Router), Material UI (MUI)
+- **Backend:** Next.js API Routes, Prisma ORM
+- **Database:** PostgreSQL
+- **Authentication:** NextAuth (Google OAuth + Credentials)
+- **Testing:** Jest, Supertest
+
+---
+
+## ⚙️ Configuration
+
+Before running the app, make sure you have:
+
+- **Node.js** v18+
+- **PostgreSQL** installed locally or use a hosted database (e.g., Supabase, Railway)
+- `.env` file configured
+
+### 1. Install dependencies
+
+```bash
+npm install
+```
+
+### 2. Set up the `.env` file
+
+Create a `.env` file at the root of the project:
+
+```env
+DATABASE_URL=
+NEXTAUTH_SECRET=
+NEXTAUTH_URL=
+
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+```
+
+> Replace the database URL and Google credentials with your own.
+
+---
+
+## 🗃️ Database Setup
+
+### 1. Generate Prisma client
+
+```bash
+npx prisma generate
+```
+
+### 2. Run migrations
+
+```bash
+npx prisma migrate dev --name init
+```
+
+### 3. Optional: Seed the database
+
+If you have a seed file:
+
+```bash
+npx prisma db seed
+```
+
+---
+
+## 🚀 Running the App
+
+### In development:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+This will start the app at [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### In production:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm start
+```
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 🔐 Authentication
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+This app uses **NextAuth** with:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Email/password login (Credentials Provider)
+- Google OAuth login
 
-## Deploy on Vercel
+Make sure Google credentials are configured correctly in your `.env`.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🧪 Running Tests
+
+Tests are written with **Jest** and **Supertest** for API route validation.
+
+```bash
+npm run test
+```
+
+---
+
+## 📁 Project Structure
+
+```
+/app
+  /api
+    /admin        → Admin-only routes
+    /user-events  → Event creation and participation
+    /event-types  → Event type listings
+    /locations    → Location queries
+  /dashboard      → Admin UI
+  /components     → Shared components
+/lib              → authOptions, Prisma client
+/prisma           → schema.prisma, migrations
+/public           → Static files
+/tests            → Jest + Supertest test cases
+```
+
+---
+
+## 👥 Roles
+
+- **STUDENT**: Can propose and join events.
+- **ADMIN**: Can manage all events, users, locations and review suggestions.
+
+---
+
+## 💡 Features
+
+- Google and email authentication
+- Create, edit, delete events/users/locations (admin)
+- Join/leave events (student)
+- Propose new event ideas with validation
+- Full dashboard for event and suggestion management
+- Responsive UI with Material UI
+
+---
