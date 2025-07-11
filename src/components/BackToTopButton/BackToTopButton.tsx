@@ -1,6 +1,6 @@
 import { Box, IconButton } from '@mui/material'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
-import { useFooterVisible } from '../hooks/useFooterVisible.'
+import { useFooterVisible } from '../../app/hooks/useFooterVisible.'
 
 
 export default function BackToTopButton() {

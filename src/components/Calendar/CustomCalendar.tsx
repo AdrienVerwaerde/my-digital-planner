@@ -116,11 +116,7 @@ export const CustomCalendar = () => {
             <Box
                 sx={{
                     display: 'grid',
-                    gridTemplateColumns: isMobile
-                        ? 'repeat(1, 1fr)'
-                        : isSmallScreen
-                            ? 'repeat(3, 1fr)'
-                            : 'repeat(4, 1fr)',
+                    gridTemplateColumns: isMobile ? 'repeat(1, 1fr)' : isSmallScreen ? 'repeat(3, 1fr)' : 'repeat(4, 1fr)',
                     justifyContent: 'center',
                     alignItems: 'center',
                     borderRadius: 2,

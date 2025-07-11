@@ -1,7 +1,7 @@
 import { Box, IconButton, Stack, Typography } from '@mui/material'
 import Link from 'next/link'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
-import { useFooterVisible } from '../hooks/useFooterVisible.'
+import { useFooterVisible } from '../../app/hooks/useFooterVisible.'
 
 export const Footer = () => {
     const isFooterVisible = useFooterVisible()
