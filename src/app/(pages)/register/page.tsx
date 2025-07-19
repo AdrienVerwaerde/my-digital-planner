@@ -18,7 +18,7 @@ function Register() {
         gap: "2rem",
         p: isMobile ? "2rem" : "4rem",
         borderRadius: "8px",
-        maxWidth: isMobile ? "100%" : "500px",
+        width: isMobile ? "100%" : "500px",
         maxHeight: isMobile ? "100%" : "750px"
     }
 

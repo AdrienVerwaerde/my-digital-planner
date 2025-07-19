@@ -58,7 +58,7 @@ export async function GET() {
         date: new Date(event.date).toLocaleDateString('en-CA', { timeZone: 'Europe/Paris' }),
         availableCount: event.participants.length,
         // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-        isUserParticipating: event.participants.some((p: any) => p.id === event.createdBy.id),
+        isUserParticipating: event.participants.some((p: any) => p.id === user.id),
     }))
 
     return NextResponse.json(mappedUserEvents)
